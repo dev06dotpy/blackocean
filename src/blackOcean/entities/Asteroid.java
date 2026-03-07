@@ -7,11 +7,10 @@ import utilities.Vector2D;
 import java.awt.*;
 import java.util.ArrayList;
 
-import static blackOcean.core.Constants.FRAME_HEIGHT;
-import static blackOcean.core.Constants.FRAME_WIDTH;
-
 import java.util.List;
 import java.util.Random;
+
+import static blackOcean.core.Constants.*;
 
 public class Asteroid extends GameObject {
     public Sprite sprite;
@@ -47,7 +46,7 @@ public class Asteroid extends GameObject {
     }
 
     public Asteroid() {
-        super(new Vector2D(Math.random() * FRAME_WIDTH, Math.random() + FRAME_HEIGHT), new Vector2D(0, 0), 0);
+        super(new Vector2D(Math.random() * WORLD_WIDTH, Math.random() + WORLD_HEIGHT), new Vector2D(0, 0), 0);
         double vx = Math.random() * MAX_SPEED;
         if (Math.random() < 0.5) vx *= -1;
         double vy = Math.random() * MAX_SPEED;
@@ -79,10 +78,10 @@ public class Asteroid extends GameObject {
         super.hit();
 
         if (isLarge) {
-            SoundManager.play(SoundManager.bangMedium);
+            //SoundManager.play(SoundManager.bangMedium);
             spawn();
         } else {
-            SoundManager.play(SoundManager.bangSmall);
+            //SoundManager.play(SoundManager.bangSmall);
         }
     }
 

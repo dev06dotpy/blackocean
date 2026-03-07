@@ -23,19 +23,6 @@ public class CollisionSystem {
                   Game.incScore(100);
             }
 
-            // bullet hits saucer
-            else if (a instanceof Bullet && b instanceof Saucer) {
-                  b.hit();
-                  a.dead = true;
-                  Game.incScore(500);
-            }
-
-            else if (b instanceof Bullet && a instanceof Saucer) {
-                  a.hit();
-                  b.dead = true;
-                  Game.incScore(500);
-            }
-
             // ship collision
             else if (a instanceof Ship && b instanceof Asteroid) {
                   a.hit(10);
@@ -54,7 +41,10 @@ public class CollisionSystem {
 
                   if(bullet.firedByShip != (ship instanceof PlayerShip)){
                         System.out.println("Bullet hit ship. Damage = " + bullet.damage);
-                        ship.hit(bullet.damage);
+
+                        if(ship instanceof PlayerShip) ship.hit(bullet.damage);
+                        else ship.hit();
+
                         bullet.dead = true;
                   }
             }
@@ -65,13 +55,16 @@ public class CollisionSystem {
 
                   if(bullet.firedByShip != (ship instanceof PlayerShip)){
                         System.out.println("Bullet hit ship. Damage = " + bullet.damage);
-                        ship.hit(bullet.damage);
+
+                        if(ship instanceof PlayerShip) ship.hit(bullet.damage);
+                        else ship.hit();
+
                         bullet.dead = true;
                   }
             }
 
             //Consumables
-            else if (a instanceof Ship && b instanceof Consumable){
+            else if (a instanceof PlayerShip && b instanceof Consumable){
                   ((Consumable) b).apply((PlayerShip) a);
             }
 

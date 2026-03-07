@@ -6,8 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 
-import static blackOcean.core.Constants.FRAME_WIDTH;
-import static blackOcean.core.Constants.FRAME_HEIGHT;
+import static blackOcean.core.Constants.*;
 
 public class View extends JComponent {
     public static final Color BG_COLOR = Color.BLACK;
@@ -27,13 +26,27 @@ public class View extends JComponent {
     }
     public void paintComponent(Graphics g0) {
         Graphics2D g = (Graphics2D) g0;
-        g.drawImage(im, bgTransf, null);
-        //g.setColor(BG_COLOR);
-        //g.fillRect(0,0,getWidth(), getHeight());
+        //g.drawImage(im, bgTransf, null);
+        g.setColor(BG_COLOR);
+        g.fillRect(0,0,getWidth(), getHeight());
+
+        AffineTransform old = g.getTransform();
+
+        int cameraX = (int) game.getPlayerShip().position.x - FRAME_WIDTH / 2;
+        int cameraY = (int) game.getPlayerShip().position.y - FRAME_HEIGHT / 2;
+
+        g.translate(-cameraX, -cameraY);
+
+        g.setColor(Color.WHITE);
+        g.drawRect(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
+
         synchronized (Game.class) {
             for (GameObject object : game.objects)
                 object.draw(g);
         }
+
+        g.setTransform(old);
+
         g.setColor(Color.YELLOW);g.setFont(new Font("dialog", Font.BOLD, 20));
         g.drawString("Level: "+Game.getLevel(), 20, FRAME_HEIGHT-20);
         g.drawString("Score: "+Game.getScore(), FRAME_WIDTH/3+20, FRAME_HEIGHT-20);

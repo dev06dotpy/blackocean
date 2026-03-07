@@ -118,13 +118,13 @@ public final class Vector2D {
 
     }
 
-    public Vector2D wrap(double w, double h) {
-        if (x>w) x -= w;
-        else if (x<0) x+= w;
-        if (y>h) y -= h;
-        else if (y<0) y += h;
-        return this;
-    }
+//    public Vector2D wrap(double w, double h) {
+//        if (x>w) x -= w;
+//        else if (x<0) x+= w;
+//        if (y>h) y -= h;
+//        else if (y<0) y += h;
+//        return this;
+//    }
 
     public double distWithWrap(Vector2D v, double w, double h) {
         double xdiff = this.x - v.x;

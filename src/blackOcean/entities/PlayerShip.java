@@ -47,7 +47,7 @@ public class PlayerShip extends Ship {
         System.out.println("Health after = " + health + ", dead = " + dead);
         if (dead){
             Game.loseLife();
-            SoundManager.play(bangLarge);
+            //SoundManager.play(bangLarge);
             System.out.println("Ship hit");
         }
         // to avoid ship loss while testing

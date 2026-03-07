@@ -104,9 +104,10 @@ public class Game {
             Color colorBody = (i % 3 != 0 ? Color.PINK : Color.GREEN);
             Random r = new Random();
             Vector2D s = new Vector2D(
-                    r.nextInt(FRAME_WIDTH),
-                    r.nextInt(FRAME_HEIGHT));
+                    r.nextInt(WORLD_WIDTH),
+                    r.nextInt(WORLD_HEIGHT));
             Ship saucer = new Saucer(ctrl, colorBody, Color.white);
+            saucer.position = s;
             if (i % 3 == 0) {
                 ((AimNShoot) ctrl).setShip(saucer);
                 // move the saucer if it is too close to the player ship;
@@ -126,8 +127,8 @@ public class Game {
         Random random = new Random();
 
         Vector2D pos = new Vector2D(
-              random.nextInt(FRAME_WIDTH),
-              random.nextInt(FRAME_HEIGHT)
+              random.nextInt(WORLD_WIDTH),
+              random.nextInt(WORLD_HEIGHT)
         );
 
         objects.add(new HealthPack(pos));
@@ -156,39 +157,45 @@ public class Game {
 
             for (int j = i + 1; j < objects.size(); j++) {
                 GameObject o2 = objects.get(j);
-                if(o2.dead) continue;
+                if (o2.dead) continue;
 
                 CollisionSystem.handle(o1, o2);
             }
         }
         List<GameObject> alive = new ArrayList<>();
-        boolean noAsteroids = true;
-        boolean noShip = true;
+        boolean noEnemies = true;
+        boolean noPlayer = true;
         for (GameObject o : objects) {
             o.update();
+
             if (o instanceof Asteroid) {
-                noAsteroids = false;
                 Asteroid a = (Asteroid) o;
                 if (!a.spawnedAsteroids.isEmpty()) {
                     alive.addAll(a.spawnedAsteroids);
                     a.spawnedAsteroids.clear();
                 }
-            } else if (o instanceof PlayerShip) noShip = false;
-            if (!o.dead) alive.add(o);
-            for (Ship s : ships)
-                if (s.bullet != null) {
-                    alive.add(s.bullet);
-                    s.bullet = null;
-                }
+            }
 
+            if (!o.dead) {
+                if (o instanceof Asteroid || o instanceof Saucer) noEnemies = false;
+                if (o instanceof PlayerShip) noPlayer = false;
+                alive.add(o);
+            }
+        }
+
+        for (Ship s : ships){
+            if (s.bullet != null) {
+                alive.add(s.bullet);
+                s.bullet = null;
+            }
         }
         synchronized (Game.class) {
             objects.clear();
             objects.addAll(alive);
         }
-        if (noAsteroids) {
+        if (noEnemies) {
             newLevel();
-        } else if (noShip) {
+        } else if (noPlayer) {
             newLife();
         }
     }

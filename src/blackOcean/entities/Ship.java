@@ -43,7 +43,7 @@ public abstract class Ship extends GameObject {
         bulletVel.addScaled(direction, MUZZLE_VELOCITY);
         bullet = new Bullet(bulletPos, bulletVel, this instanceof PlayerShip);
         bullet.position.addScaled(direction, (radius + bullet.radius) * 2);
-        SoundManager.fire();
+        //SoundManager.fire();
     }
 
     @Override
@@ -58,11 +58,11 @@ public abstract class Ship extends GameObject {
                     //System.out.println("made bullet");
                     action.shoot = false;
                     timeLastShot = time;
-                    SoundManager.fire();
+                    //SoundManager.fire();
                 }
         }
         thrusting = action.thrust != 0;
-        if (thrusting) SoundManager.play(thrust);
+        //if (thrusting) SoundManager.play(thrust);
         direction.rotate(action.turn * STEER_RATE * DT);
         velocity = new Vector2D(direction).mult(velocity.mag());
         velocity.addScaled(direction, MAG_ACC * DT * action.thrust);

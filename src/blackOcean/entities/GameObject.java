@@ -23,7 +23,22 @@ public abstract class GameObject {
     }
     public void update() {
         position.addScaled(velocity, DT);
-        position.wrap(FRAME_WIDTH, FRAME_HEIGHT);
+        //position.wrap(FRAME_WIDTH, FRAME_HEIGHT);
+        if(position.x < radius){
+            position.x = radius;
+            velocity.x = - velocity.x;
+        }else if(position.x > WORLD_WIDTH - radius){
+            position.x = WORLD_WIDTH - radius;
+            velocity.x = - velocity.x;
+        }
+
+        if(position.y < radius){
+            position.y = radius;
+            velocity.y = - velocity.y;
+        }else if(position.y > WORLD_HEIGHT - radius){
+            position.y = WORLD_HEIGHT - radius;
+            velocity.y = - velocity.y;
+        }
     }
 
     public void hit() {

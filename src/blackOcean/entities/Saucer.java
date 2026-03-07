@@ -4,8 +4,7 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 
-import static blackOcean.core.Constants.FRAME_HEIGHT;
-import static blackOcean.core.Constants.FRAME_WIDTH;
+import static blackOcean.core.Constants.*;
 import static utilities.SoundManager.bangMedium;
 
 import blackOcean.controllers.Controller;
@@ -20,7 +19,7 @@ public class Saucer extends Ship {
 
     public Color colorBelt;
     public Saucer(Controller ctrl, Color colorBody, Color colorBelt){
-        super(new Vector2D(FRAME_WIDTH*Math.random(), FRAME_HEIGHT*Math.random()), new Vector2D(0, -1), 10);
+        super(new Vector2D(WORLD_WIDTH*Math.random(), WORLD_HEIGHT*Math.random()), new Vector2D(0, -1), 10);
         this.ctrl = ctrl;
         direction = new Vector2D(0,-1);
         thrusting = false;
@@ -48,6 +47,6 @@ public class Saucer extends Ship {
 
     public void hit() {
         super.hit();
-        SoundManager.play(bangMedium);
+        //SoundManager.play(bangMedium);
     }
 }
