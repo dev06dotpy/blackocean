@@ -1,9 +1,13 @@
-package blackOcean;
+package blackOcean.controllers;
 
+import blackOcean.core.Constants;
+import blackOcean.entities.Bullet;
+import blackOcean.entities.GameObject;
+import blackOcean.entities.Ship;
 import utilities.Vector2D;
 
-import static blackOcean.Constants.DT;
-import static blackOcean.Constants.FRAME_WIDTH;
+import static blackOcean.core.Constants.DT;
+import static blackOcean.core.Constants.FRAME_WIDTH;
 
 
 public class Controllers {

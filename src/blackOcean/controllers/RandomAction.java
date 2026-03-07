@@ -1,6 +1,6 @@
-package blackOcean;
+package blackOcean.controllers;
 
-public class RandomAction implements Controller{
+public class RandomAction implements Controller {
     Action action = new Action();
 
     int rotationDirection = 1;

@@ -1,6 +1,11 @@
-package blackOcean;
+package blackOcean.controllers;
 
-import static blackOcean.Constants.DT;
+import blackOcean.core.Game;
+import blackOcean.entities.Bullet;
+import blackOcean.entities.GameObject;
+import blackOcean.entities.Ship;
+
+import static blackOcean.core.Constants.DT;
 
 public class AimNShoot implements Controller {
     public static final double SHOOTING_DISTANCE = Bullet.BULLET_LIFE * Ship.MUZZLE_VELOCITY;

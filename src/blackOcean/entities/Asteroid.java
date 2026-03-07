@@ -1,13 +1,14 @@
-package blackOcean;
+package blackOcean.entities;
 
+import blackOcean.graphics.Sprite;
 import utilities.SoundManager;
 import utilities.Vector2D;
 
 import java.awt.*;
 import java.util.ArrayList;
 
-import static blackOcean.Constants.FRAME_HEIGHT;
-import static blackOcean.Constants.FRAME_WIDTH;
+import static blackOcean.core.Constants.FRAME_HEIGHT;
+import static blackOcean.core.Constants.FRAME_WIDTH;
 
 import java.util.List;
 import java.util.Random;

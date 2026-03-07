@@ -1,10 +1,10 @@
-package blackOcean;
+package blackOcean.entities;
 
 import utilities.Vector2D;
 
 import java.awt.*;
 
-import static blackOcean.Constants.*;
+import static blackOcean.core.Constants.*;
 
 public abstract class GameObject {
     public Vector2D position;
@@ -21,7 +21,6 @@ public abstract class GameObject {
         this.radius = radius;
         this.dead = false;
     }
-
     public void update() {
         position.addScaled(velocity, DT);
         position.wrap(FRAME_WIDTH, FRAME_HEIGHT);

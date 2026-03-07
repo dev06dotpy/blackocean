@@ -1,4 +1,4 @@
-package blackOcean;
+package blackOcean.controllers;
 
 public class Action {
     public int thrust;

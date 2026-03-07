@@ -1,4 +1,4 @@
-package blackOcean;
+package blackOcean.core;
 import utilities.ImageManager;
 
 import java.awt.*;

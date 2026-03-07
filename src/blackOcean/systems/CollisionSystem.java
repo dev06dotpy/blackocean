@@ -1,4 +1,8 @@
-package blackOcean;
+package blackOcean.systems;
+
+import blackOcean.core.Game;
+import blackOcean.entities.*;
+import blackOcean.entities.Consumables.Consumable;
 
 public class CollisionSystem {
 
@@ -64,6 +68,15 @@ public class CollisionSystem {
                         ship.hit(bullet.damage);
                         bullet.dead = true;
                   }
+            }
+
+            //Consumables
+            else if (a instanceof Ship && b instanceof Consumable){
+                  ((Consumable) b).apply((PlayerShip) a);
+            }
+
+            else if (b instanceof PlayerShip && a instanceof Consumable){
+                  ((Consumable) a).apply((PlayerShip) b);
             }
       }
 }

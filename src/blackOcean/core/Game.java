@@ -1,5 +1,11 @@
-package blackOcean;
+package blackOcean.core;
 
+import blackOcean.controllers.AimNShoot;
+import blackOcean.controllers.RandomAction;
+import blackOcean.controllers.Controller;
+import blackOcean.entities.Consumables.HealthPack;
+import blackOcean.systems.CollisionSystem;
+import blackOcean.entities.*;
 import utilities.JEasyFrame;
 import utilities.Vector2D;
 
@@ -8,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static blackOcean.Constants.*;
+import static blackOcean.core.Constants.*;
 
 public class Game {
     public static final int N_INITIAL_ASTEROIDS = 5;
@@ -42,6 +48,7 @@ public class Game {
         ships.add(playerShip);
 
         addSaucers();
+        addConsumables();
     }
 
     public void newLevel() {
@@ -62,6 +69,7 @@ public class Game {
             objects.add(playerShip);
             ships.add(playerShip);
             addSaucers();
+            addConsumables();
         }
 
     }
@@ -86,6 +94,7 @@ public class Game {
             ships.add(playerShip);
             // saucer = new Saucer(new RandomAction());
             addSaucers();
+            addConsumables();
         }
     }
 
@@ -111,6 +120,17 @@ public class Game {
             objects.add(saucer);
             ships.add(saucer);
         }
+    }
+
+    private void addConsumables(){
+        Random random = new Random();
+
+        Vector2D pos = new Vector2D(
+              random.nextInt(FRAME_WIDTH),
+              random.nextInt(FRAME_HEIGHT)
+        );
+
+        objects.add(new HealthPack(pos));
     }
 
     public static void main(String[] args) {

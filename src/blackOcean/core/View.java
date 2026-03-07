@@ -1,11 +1,13 @@
-package blackOcean;
+package blackOcean.core;
+
+import blackOcean.entities.GameObject;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 
-import static blackOcean.Constants.FRAME_WIDTH;
-import static blackOcean.Constants.FRAME_HEIGHT;
+import static blackOcean.core.Constants.FRAME_WIDTH;
+import static blackOcean.core.Constants.FRAME_HEIGHT;
 
 public class View extends JComponent {
     public static final Color BG_COLOR = Color.BLACK;

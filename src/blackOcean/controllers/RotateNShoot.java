@@ -1,4 +1,4 @@
-package blackOcean;
+package blackOcean.controllers;
 
 public class RotateNShoot implements Controller {
     Action action = new Action();

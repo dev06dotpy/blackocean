@@ -1,5 +1,7 @@
-package blackOcean;
+package blackOcean.entities;
 
+import blackOcean.controllers.Controller;
+import blackOcean.core.Game;
 import utilities.SoundManager;
 import utilities.Vector2D;
 import static utilities.SoundManager.bangLarge;
@@ -7,7 +9,7 @@ import static utilities.SoundManager.bangLarge;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 
-import static blackOcean.Constants.*;
+import static blackOcean.core.Constants.*;
 
 public class PlayerShip extends Ship {
 
@@ -54,6 +56,8 @@ public class PlayerShip extends Ship {
     public int getHealth(){return health;}
 
     public int getMaxHealth(){return maxHealth;}
+
+    public void heal(int amount) {health = Math.min(maxHealth, health + amount);}
 
     public String toString() {
         return "Ship: " + super.toString();

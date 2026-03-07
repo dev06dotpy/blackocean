@@ -1,4 +1,7 @@
-package blackOcean;
+package blackOcean.core;
+
+import blackOcean.controllers.Action;
+import blackOcean.controllers.Controller;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;

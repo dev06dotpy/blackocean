@@ -1,6 +1,9 @@
-package blackOcean;
+package blackOcean.entities;
 
-import static blackOcean.Constants.DT;
+import static blackOcean.core.Constants.DT;
+
+import blackOcean.controllers.Action;
+import blackOcean.controllers.Controller;
 import utilities.Vector2D;
 import utilities.SoundManager;
 
@@ -68,7 +71,7 @@ public abstract class Ship extends GameObject {
     }
 
     public boolean canHit(GameObject other) {
-        return (other instanceof Asteroid  || other instanceof PlayerShip);
+        return (other instanceof Asteroid || other instanceof PlayerShip);
     }
 
 }

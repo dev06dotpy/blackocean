@@ -1,17 +1,18 @@
-package blackOcean;
+package blackOcean.entities;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 
-import static blackOcean.Constants.FRAME_HEIGHT;
-import static blackOcean.Constants.FRAME_WIDTH;
+import static blackOcean.core.Constants.FRAME_HEIGHT;
+import static blackOcean.core.Constants.FRAME_WIDTH;
 import static utilities.SoundManager.bangMedium;
 
+import blackOcean.controllers.Controller;
 import utilities.SoundManager;
 import utilities.Vector2D;
 
-public class Saucer extends  Ship{
+public class Saucer extends Ship {
     public static final int HEIGHT = 12;
     public static final int WIDTH = 24;
     public static final int WIDTH_ELLIPSE = 20;

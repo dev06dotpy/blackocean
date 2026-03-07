@@ -1,11 +1,11 @@
-package blackOcean;
+package blackOcean.entities;
 
 import utilities.Vector2D;
 
 import java.awt.*;
 
 
-import static blackOcean.Constants.DT;
+import static blackOcean.core.Constants.DT;
 
 public class Bullet extends GameObject {
     private double lifetime;
