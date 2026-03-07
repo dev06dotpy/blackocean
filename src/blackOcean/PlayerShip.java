@@ -19,7 +19,7 @@ public class PlayerShip extends Ship {
         bullet = null;
         color = Color.CYAN;
         maxHealth = 100;
-        currentHealth = 100;
+        health = 100;
     }
 
     @Override
@@ -40,7 +40,9 @@ public class PlayerShip extends Ship {
 
     @Override
     public void hit(int damage) {
+        System.out.println("Player took " + damage + " damage. Health before = " + health);
         super.hit(damage);
+        System.out.println("Health after = " + health + ", dead = " + dead);
         if (dead){
             Game.loseLife();
             SoundManager.play(bangLarge);
@@ -48,6 +50,10 @@ public class PlayerShip extends Ship {
         }
         // to avoid ship loss while testing
     }
+
+    public int getHealth(){return health;}
+
+    public int getMaxHealth(){return maxHealth;}
 
     public String toString() {
         return "Ship: " + super.toString();

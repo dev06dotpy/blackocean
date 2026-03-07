@@ -20,8 +20,9 @@ public class Controllers {
                 minDistance = dist;
             }
         }
-        if (closestTarget==null) System.out.println("No target found");
-        return closestTarget;
+        //if (closestTarget==null)
+            //System.out.println("No target found");
+    return closestTarget;
     }
 
     public static double angleToTarget(Ship ship, GameObject target) {
@@ -31,7 +32,7 @@ public class Controllers {
 
     public static int aim(Ship ship, GameObject target) {
         double angle = angleToTarget(ship, target);
-        System.out.println("angle = " + angle);
+        // System.out.println("angle = " + angle);
         if (Math.abs(angle) < 0.8 * Ship.STEER_RATE * DT)
             return 0;
         else

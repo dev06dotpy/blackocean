@@ -132,8 +132,12 @@ public class Game {
     public void update() {
         for (int i = 0; i < objects.size(); i++) {
             GameObject o1 = objects.get(i);
+            if (o1.dead) continue;
+
             for (int j = i + 1; j < objects.size(); j++) {
                 GameObject o2 = objects.get(j);
+                if(o2.dead) continue;
+
                 CollisionSystem.handle(o1, o2);
             }
         }
@@ -197,6 +201,7 @@ public class Game {
         return lives;
     }
 
+    public PlayerShip getPlayerShip(){return playerShip;}
 
 }
 

@@ -11,7 +11,8 @@ public abstract class GameObject {
     public Vector2D velocity;
     public double radius;
     public boolean dead;
-    public double health;
+    public int health;
+    public int maxHealth;
 
 
     public GameObject(Vector2D position, Vector2D velocity, double radius) {

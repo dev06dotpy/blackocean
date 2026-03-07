@@ -14,8 +14,6 @@ public abstract class Ship extends GameObject {
     public Vector2D direction;
     public boolean thrusting;
     public Color color;
-    public int maxHealth = 100;
-    public int currentHealth = 100;
 
     public int XP[] = { -6, 0, 6, 0 }, YP[] = { 8, 4, 8, -8 };
     public int XPTHRUST[] = { -5, 0, 5, 0 }, YPTHRUST[] = { 7, 3, 7, -7 }; public static final int RADIUS = 8;

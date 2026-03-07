@@ -32,9 +32,33 @@ public class View extends JComponent {
             for (GameObject object : game.objects)
                 object.draw(g);
         }
-        g.setColor(Color.YELLOW);g.setFont(new Font("dialog", Font.BOLD, 20));g.drawString("Level: "+Game.getLevel(), 20, FRAME_HEIGHT-20);
+        g.setColor(Color.YELLOW);g.setFont(new Font("dialog", Font.BOLD, 20));
+        g.drawString("Level: "+Game.getLevel(), 20, FRAME_HEIGHT-20);
         g.drawString("Score: "+Game.getScore(), FRAME_WIDTH/3+20, FRAME_HEIGHT-20);
         g.drawString("Lives: "+Game.getLives(), 2*FRAME_WIDTH/3+20, FRAME_HEIGHT-20);
+
+        int barX = 20;
+        int barY = FRAME_HEIGHT - 60;
+        int barWidth = 200;
+        int barHeight = 20;
+
+        int currentHealth = (int) (game.getPlayerShip().getHealth() / (double) game.getPlayerShip().getMaxHealth() * barWidth);
+
+        //background
+        g.setColor(Color.DARK_GRAY);
+        g.fillRect(barX, barY, barWidth, barHeight);
+
+        //health
+        g.setColor(Color.RED);
+        g.fillRect(barX, barY, currentHealth, barHeight);
+
+        //border
+        g.setColor(Color.WHITE);
+        g.drawRect(barX, barY, barWidth, barHeight);
+
+        //label
+        g.setColor(Color.YELLOW);
+        g.drawString("Health: " + game.getPlayerShip().getHealth() + "/" + game.getPlayerShip().getMaxHealth(), barX, barY - 5);
         if (Game.getLives()==0)
             g.drawString("GAME OVER Score "+Game.getScore(), FRAME_WIDTH/2-100, FRAME_HEIGHT/2-20);
     }
@@ -42,4 +66,6 @@ public class View extends JComponent {
     public Dimension getPreferredSize(){
         return Constants.FRAME_SIZE;
     }
+
+
 }
