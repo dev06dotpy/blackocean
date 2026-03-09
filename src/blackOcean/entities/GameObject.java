@@ -1,5 +1,7 @@
 package blackOcean.entities;
 
+import blackOcean.core.Game;
+import blackOcean.core.Planet;
 import utilities.Vector2D;
 
 import java.awt.*;
@@ -27,22 +29,45 @@ public abstract class GameObject {
     }
     public void update() {
         position.addScaled(velocity, DT);
-        //position.wrap(FRAME_WIDTH, FRAME_HEIGHT);
-        if(position.x < radius){
-            position.x = radius;
-            velocity.x = - velocity.x;
-        }else if(position.x > WORLD_WIDTH - radius){
-            position.x = WORLD_WIDTH - radius;
-            velocity.x = - velocity.x;
-        }
+        if (Game.getCurrentMode() == Game.GameMode.SPACE) {
+            if (position.x < radius) {
+                position.x = radius;
+                velocity.x = -velocity.x;
+            } else if (position.x > WORLD_WIDTH - radius) {
+                position.x = WORLD_WIDTH - radius;
+                velocity.x = -velocity.x;
+            }
 
-        if(position.y < radius){
-            position.y = radius;
-            velocity.y = - velocity.y;
-        }else if(position.y > WORLD_HEIGHT - radius){
-            position.y = WORLD_HEIGHT - radius;
-            velocity.y = - velocity.y;
+            if (position.y < radius) {
+                position.y = radius;
+                velocity.y = -velocity.y;
+            } else if (position.y > WORLD_HEIGHT - radius) {
+                position.y = WORLD_HEIGHT - radius;
+                velocity.y = -velocity.y;
+            }
+        } else if (Game.getCurrentMode() == Game.GameMode.PLANET) {
+            Planet planet = Game.getCurrentPlanet();
+            if (planet != null && planet.collidesWithWall(position, radius)) {
+                position.addScaled(velocity, -DT);
+                velocity = new Vector2D(0, 0);
+            }
         }
+        //position.wrap(FRAME_WIDTH, FRAME_HEIGHT);
+//        if(position.x < radius){
+//            position.x = radius;
+//            velocity.x = - velocity.x;
+//        }else if(position.x > WORLD_WIDTH - radius){
+//            position.x = WORLD_WIDTH - radius;
+//            velocity.x = - velocity.x;
+//        }
+//
+//        if(position.y < radius){
+//            position.y = radius;
+//            velocity.y = - velocity.y;
+//        }else if(position.y > WORLD_HEIGHT - radius){
+//            position.y = WORLD_HEIGHT - radius;
+//            velocity.y = - velocity.y;
+//        }
     }
 
     public void hit() {
@@ -61,30 +86,6 @@ public abstract class GameObject {
     public boolean overlap(GameObject other) {
         return this.position.distWithWrap(other.position, FRAME_WIDTH, FRAME_HEIGHT) < this.radius + other.radius;
     }
-
-//    public void collisionHandling(GameObject other) {
-//        if (this.getClass() != other.getClass() && this.overlap(other) && this.canCollide(other)) {
-//            // System.out.println(this + " " + other);
-//            this.hit();
-//            other.hit();
-//            if (this instanceof Asteroid && other instanceof Bullet) {
-//                Bullet b = (Bullet) other;
-//                if (b.firedByShip) Game.incScore(100);
-//            }
-//            if (this instanceof Bullet && other instanceof Asteroid) {
-//                Bullet b = (Bullet) this;
-//                if (b.firedByShip) Game.incScore(100);
-//            }
-//            if (this instanceof Saucer && other instanceof Bullet) {
-//                Bullet b = (Bullet) other;
-//                if (b.firedByShip) Game.incScore(500);
-//            }
-//            if (this instanceof Bullet && other instanceof Saucer) {
-//                Bullet b = (Bullet) this;
-//                if (b.firedByShip) Game.incScore(500);
-//            }
-//        }
-//    }
 
     public abstract void draw(Graphics2D g);
 

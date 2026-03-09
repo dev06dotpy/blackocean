@@ -13,6 +13,7 @@ import utilities.JEasyFrame;
 import utilities.Vector2D;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -27,12 +28,17 @@ public class Game {
     Keys ctrl;
     Controller controller;
 
-    private Planet planet;
+    //private Planet planet;
 
     private static int score = 0;
     private static int lives = 50;  // should be about 5 but made large during testing of collision handling
     private static int level = 1;
     public static boolean gameOver = false;
+    public enum GameMode{ SPACE, PLANET}
+    private GameMode mode = GameMode.SPACE;
+    private Planet planet;
+    private static GameMode currentMode = GameMode.SPACE;
+    private static Planet currentPlanet;
     public Game() {
         objects = new ArrayList<GameObject>();
         ships = new ArrayList<Ship>();
@@ -40,18 +46,55 @@ public class Game {
             objects.add(new Asteroid());
 
         }
-        ctrl = new Keys();  //always create this (even when not used) to avoid
+        ctrl = new Keys(this);  //always create this (even when not used) to avoid
         // having to comment out adding of action listener
         controller = ctrl;
         // alternate controller options to replace above line
         // controller = new RandomAction();
         // controller = new RotateNShoot();
+//        playerShip = new PlayerShip(controller);
+//        objects.add(playerShip);
+//        ships.add(playerShip);
+//
+//        mode = GameMode.SPACE;
+//        currentMode = mode;
+//        currentPlanet = null;
+//
+//        addSaucers();
+//        addConsumables();
+
+        spaceMode();
+    }
+
+    public void spaceMode(){
+        objects.clear();
+        ships.clear();
+
+        planet = null;
+        mode = GameMode.SPACE;
+
+        for(int i = 0; i < N_INITIAL_ASTEROIDS + 2 * (level - 1); i++) objects.add(new Asteroid());
+
         playerShip = new PlayerShip(controller);
         objects.add(playerShip);
         ships.add(playerShip);
 
+        addSaucers();
+        addConsumables();
+    }
+
+    public void planetMode(){
+        objects.clear();
+        ships.clear();
+
         planet = new Planet();
         planet.generate();
+        mode = GameMode.PLANET;
+
+        playerShip = new PlayerShip(controller);
+        playerShip.position = planet.spawnPosition();
+        objects.add(playerShip);
+        ships.add(playerShip);
 
         addSaucers();
         addConsumables();
@@ -65,17 +108,20 @@ public class Game {
 
         }
         synchronized (Game.class) {
-            objects.clear();
-            ships.clear();
-            for (int i = 0; i < N_INITIAL_ASTEROIDS + 2 * (level - 1); i++) {
-                objects.add(new Asteroid());
-
-            }
-            playerShip = new PlayerShip(controller);
-            objects.add(playerShip);
-            ships.add(playerShip);
-            addSaucers();
-            addConsumables();
+//            objects.clear();
+//            ships.clear();
+//            for (int i = 0; i < N_INITIAL_ASTEROIDS + 2 * (level - 1); i++) {
+//                objects.add(new Asteroid());
+//
+//            }
+//            playerShip = new PlayerShip(controller);
+//            objects.add(playerShip);
+//            ships.add(playerShip);
+//            mode = GameMode.SPACE;
+//            planet = null;
+//            addSaucers();
+//            addConsumables();
+            spaceMode();
         }
 
     }
@@ -87,20 +133,24 @@ public class Game {
 
         }
         synchronized (Game.class) {
-            objects.clear();
-            ships.clear();
-            for (int i = 0; i < N_INITIAL_ASTEROIDS + 2 * (level - 1); i++) {
-                objects.add(new Asteroid());
-
-            }
-            // playerShip = new Ship(ctrl);
-            // playerShip = new Ship(new RotateNShoot());
-            playerShip = new PlayerShip(controller);
-            objects.add(playerShip);
-            ships.add(playerShip);
-            // saucer = new Saucer(new RandomAction());
-            addSaucers();
-            addConsumables();
+            if (mode == GameMode.PLANET) planetMode();
+            else spaceMode();
+//            objects.clear();
+//            ships.clear();
+//            for (int i = 0; i < N_INITIAL_ASTEROIDS + 2 * (level - 1); i++) {
+//                objects.add(new Asteroid());
+//
+//            }
+//            // playerShip = new Ship(ctrl);
+//            // playerShip = new Ship(new RotateNShoot());
+//            playerShip = new PlayerShip(controller);
+//            objects.add(playerShip);
+//            ships.add(playerShip);
+//            // saucer = new Saucer(new RandomAction());
+//            mode = GameMode.SPACE;
+//            planet = null;
+//            addSaucers();
+//            addConsumables();
         }
     }
 
@@ -109,11 +159,18 @@ public class Game {
             Controller ctrl = (i % 3 != 0 ? new RandomAction() : new AimNShoot(this));
             Color colorBody = (i % 3 != 0 ? Color.PINK : Color.GREEN);
             Random r = new Random();
-            Vector2D s = new Vector2D(
-                    r.nextInt(WORLD_WIDTH),
-                    r.nextInt(WORLD_HEIGHT));
+            Vector2D pos;
+            double spawnRadius = 12;
+
+            if(mode == GameMode.PLANET && planet != null) pos = planet.randomCavePosition(spawnRadius);
+            else{
+                pos = new Vector2D(
+                      r.nextInt(WORLD_WIDTH),
+                      r.nextInt(WORLD_HEIGHT)
+                );
+            }
             Ship saucer = new Saucer(ctrl, colorBody, Color.white);
-            saucer.position = s;
+            saucer.position = pos;
             if (i % 3 == 0) {
                 ((AimNShoot) ctrl).setShip(saucer);
                 // move the saucer if it is too close to the player ship;
@@ -129,16 +186,21 @@ public class Game {
         }
     }
 
-    private GameObject addConsumables(){
+    private GameObject addConsumables() {
 
         Random random = new Random();
         int chance = random.nextInt(10);
 
-        Vector2D pos = new Vector2D(
+        Vector2D pos;
+        double spawnRadius = 12;
+
+        if(mode == GameMode.PLANET && planet != null) pos = planet.randomCavePosition(spawnRadius);
+        else{
+            pos = new Vector2D(
               random.nextInt(WORLD_WIDTH),
               random.nextInt(WORLD_HEIGHT)
-        );
-
+            );
+        }
         if(chance < 4) return new HealthPack(pos);
         else if(chance < 8) return new FuelTank(pos);
         else return new ShieldBattery(pos);
@@ -179,6 +241,8 @@ public class Game {
         for (GameObject o : objects) {
             o.update();
 
+            applyWorldRules(o);
+
             if (o instanceof Asteroid) {
                 Asteroid a = (Asteroid) o;
                 if (!a.spawnedAsteroids.isEmpty()) {
@@ -195,16 +259,16 @@ public class Game {
             }
         }
 
-        for (Ship s : ships){
+        for (Ship s : ships) {
             if (s.bullet != null) {
                 alive.add(s.bullet);
                 s.bullet = null;
             }
         }
 
-        while(consumableCount < 5){
+        while (consumableCount < 5) {
             alive.add(addConsumables());
-            consumableCount ++;
+            consumableCount++;
         }
 
         synchronized (Game.class) {
@@ -215,6 +279,33 @@ public class Game {
             newLevel();
         } else if (noPlayer) {
             newLife();
+        }
+
+    }
+
+    private void applyWorldRules(GameObject o) {
+        if (mode == GameMode.SPACE) {
+            if (o.position.x < o.radius) {
+                o.position.x = o.radius;
+                o.velocity.x = -o.velocity.x;
+            } else if (o.position.x > WORLD_WIDTH - o.radius) {
+                o.position.x = WORLD_WIDTH - o.radius;
+                o.velocity.x = -o.velocity.x;
+            }
+
+            if (o.position.y < o.radius) {
+                o.position.y = o.radius;
+                o.velocity.y = -o.velocity.y;
+            } else if (o.position.y > WORLD_HEIGHT - o.radius) {
+                o.position.y = WORLD_HEIGHT - o.radius;
+                o.velocity.y = -o.velocity.y;
+            }
+
+        } else if (mode == GameMode.PLANET) {
+            if (planet != null && planet.collidesWithWall(o.position, o.radius)) {
+                o.position.addScaled(o.velocity, -DT);
+                o.velocity = new Vector2D(0, 0);
+            }
         }
     }
 
@@ -234,6 +325,44 @@ public class Game {
             gameOver = true;
     }
 
+
+
+
+    public void enterPlanetMode() {
+        planet = new Planet();
+        planet.generate();
+
+        playerShip.position = planet.spawnPosition();
+        playerShip.velocity = new Vector2D(0, 0);
+
+        mode = GameMode.PLANET;
+    }
+
+    public void togglePlanetMode() {
+
+        synchronized (Game.class){
+            if (mode == GameMode.PLANET) planetMode();
+            else spaceMode();
+        }
+
+//        if (mode == GameMode.SPACE) {
+//            planet = new Planet();
+//            planet.generate();
+//
+//            playerShip.position = planet.spawnPosition();
+//            playerShip.velocity = new Vector2D(0, 0);
+//
+//            mode = GameMode.PLANET;
+//        } else {
+//            playerShip.position = new Vector2D(WORLD_WIDTH / 2.0, WORLD_HEIGHT / 2.0);
+//            playerShip.velocity = new Vector2D(0, 0);
+//
+//            mode = GameMode.SPACE;
+//            planet = null;
+//        }
+    }
+
+
     public static int getScore() {
         return score;
     }
@@ -248,6 +377,7 @@ public class Game {
 
     public PlayerShip getPlayerShip(){return playerShip;}
 
-    public Planet getPlanet() { return planet;}
+    public static GameMode getCurrentMode(){return currentMode;}
+    public static Planet getCurrentPlanet(){return currentPlanet;}
 }
 

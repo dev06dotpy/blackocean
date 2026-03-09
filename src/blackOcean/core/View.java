@@ -40,7 +40,13 @@ public class View extends JComponent {
         g.setColor(Color.WHITE);
         g.drawRect(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
 
-        game.getPlanet().draw(g);
+        if (game.getCurrentMode() == Game.GameMode.PLANET && game.getCurrentPlanet() != null) {
+            game.getCurrentPlanet().draw(g);
+        } else {
+            for (GameObject obj : game.objects) {
+                obj.draw(g);
+            }
+        }
         synchronized (Game.class) {
             for (GameObject object : game.objects)
                 object.draw(g);

@@ -1,5 +1,7 @@
 package blackOcean.core;
 
+import utilities.Vector2D;
+
 import java.awt.*;
 import java.util.Random;
 
@@ -20,7 +22,7 @@ public class Planet {
             for(int y = 0; y < PLANET_HEIGHT; y++){
                   for(int x = 0; x < PLANET_WIDTH; x++){
                         if(x == 0 || y == 0 || x == PLANET_WIDTH - 1 || y == PLANET_HEIGHT - 1) walls[y][x] = true;
-                        else walls[y][x] = random.nextDouble() < 0.52;
+                        else walls[y][x] = random.nextDouble() < 0.53;
                   }
             }
 
@@ -59,6 +61,10 @@ public class Planet {
             return count;
       }
 
+      public Vector2D spawnPosition(){
+            return new Vector2D(PLANET_PIXEL_WIDTH / 2, PLANET_PIXEL_HEIGHT / 2);
+      }
+
       private void clearSpawn(){
             int centerX = PLANET_WIDTH / 2;
             int centerY = PLANET_HEIGHT / 2;
@@ -66,6 +72,39 @@ public class Planet {
             for(int y = centerY - 3; y < centerY + 3; y++){
                   for(int x = centerX - 3; x < centerX + 3; x++){
                         if(x >= 0 && y >= 0 && x < PLANET_WIDTH && y < PLANET_HEIGHT) walls[y][x] = false;
+                  }
+            }
+      }
+
+      public boolean isWallTile(int tileX, int tileY) {
+            if (tileX < 0 || tileY < 0 || tileX >= PLANET_WIDTH || tileY >= PLANET_HEIGHT) return true;
+            return walls[tileY][tileX];
+      }
+
+      public boolean isWallAtPixel(double px, double py) {
+            int tileX = (int) (px / TILE_SIZE);
+            int tileY = (int) (py / TILE_SIZE);
+            return isWallTile(tileX, tileY);
+      }
+
+      public boolean collidesWithWall(Vector2D pos, double radius) {
+            return isWallAtPixel(pos.x, pos.y) ||
+                  isWallAtPixel(pos.x - radius, pos.y) ||
+                  isWallAtPixel(pos.x + radius, pos.y) ||
+                  isWallAtPixel(pos.x, pos.y - radius) ||
+                  isWallAtPixel(pos.x, pos.y + radius);
+      }
+
+      public Vector2D randomCavePosition(double radius) {
+            Random random = new Random();
+
+            while (true) {
+                  double x = random.nextInt(PLANET_PIXEL_WIDTH);
+                  double y = random.nextInt(PLANET_PIXEL_HEIGHT);
+                  Vector2D pos = new Vector2D(x, y);
+
+                  if (!collidesWithWall(pos, radius)) {
+                        return pos;
                   }
             }
       }
