@@ -27,11 +27,12 @@ public class Game {
     Keys ctrl;
     Controller controller;
 
+    private Planet planet;
+
     private static int score = 0;
     private static int lives = 50;  // should be about 5 but made large during testing of collision handling
     private static int level = 1;
     public static boolean gameOver = false;
-
     public Game() {
         objects = new ArrayList<GameObject>();
         ships = new ArrayList<Ship>();
@@ -39,7 +40,6 @@ public class Game {
             objects.add(new Asteroid());
 
         }
-
         ctrl = new Keys();  //always create this (even when not used) to avoid
         // having to comment out adding of action listener
         controller = ctrl;
@@ -49,6 +49,9 @@ public class Game {
         playerShip = new PlayerShip(controller);
         objects.add(playerShip);
         ships.add(playerShip);
+
+        planet = new Planet();
+        planet.generate();
 
         addSaucers();
         addConsumables();
@@ -245,5 +248,6 @@ public class Game {
 
     public PlayerShip getPlayerShip(){return playerShip;}
 
+    public Planet getPlanet() { return planet;}
 }
 

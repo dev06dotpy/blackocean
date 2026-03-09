@@ -40,6 +40,7 @@ public class View extends JComponent {
         g.setColor(Color.WHITE);
         g.drawRect(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
 
+        game.getPlanet().draw(g);
         synchronized (Game.class) {
             for (GameObject object : game.objects)
                 object.draw(g);
