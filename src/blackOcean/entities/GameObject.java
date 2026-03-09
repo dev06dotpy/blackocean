@@ -13,6 +13,10 @@ public abstract class GameObject {
     public boolean dead;
     public int health;
     public int maxHealth;
+    public int fuel;
+    public int maxFuel;
+    public int shields;
+    public int maxShields;
 
 
     public GameObject(Vector2D position, Vector2D velocity, double radius) {

@@ -3,7 +3,10 @@ package blackOcean.core;
 import blackOcean.controllers.AimNShoot;
 import blackOcean.controllers.RandomAction;
 import blackOcean.controllers.Controller;
+import blackOcean.entities.Consumables.Consumable;
+import blackOcean.entities.Consumables.FuelTank;
 import blackOcean.entities.Consumables.HealthPack;
+import blackOcean.entities.Consumables.ShieldBattery;
 import blackOcean.systems.CollisionSystem;
 import blackOcean.entities.*;
 import utilities.JEasyFrame;
@@ -123,15 +126,19 @@ public class Game {
         }
     }
 
-    private void addConsumables(){
+    private GameObject addConsumables(){
+
         Random random = new Random();
+        int chance = random.nextInt(10);
 
         Vector2D pos = new Vector2D(
               random.nextInt(WORLD_WIDTH),
               random.nextInt(WORLD_HEIGHT)
         );
 
-        objects.add(new HealthPack(pos));
+        if(chance < 4) return new HealthPack(pos);
+        else if(chance < 8) return new FuelTank(pos);
+        else return new ShieldBattery(pos);
     }
 
     public static void main(String[] args) {
@@ -165,6 +172,7 @@ public class Game {
         List<GameObject> alive = new ArrayList<>();
         boolean noEnemies = true;
         boolean noPlayer = true;
+        int consumableCount = 0;
         for (GameObject o : objects) {
             o.update();
 
@@ -179,6 +187,7 @@ public class Game {
             if (!o.dead) {
                 if (o instanceof Asteroid || o instanceof Saucer) noEnemies = false;
                 if (o instanceof PlayerShip) noPlayer = false;
+                if (o instanceof Consumable) consumableCount++;
                 alive.add(o);
             }
         }
@@ -189,6 +198,12 @@ public class Game {
                 s.bullet = null;
             }
         }
+
+        while(consumableCount < 5){
+            alive.add(addConsumables());
+            consumableCount ++;
+        }
+
         synchronized (Game.class) {
             objects.clear();
             objects.addAll(alive);

@@ -51,29 +51,17 @@ public class View extends JComponent {
         g.drawString("Level: "+Game.getLevel(), 20, FRAME_HEIGHT-20);
         g.drawString("Score: "+Game.getScore(), FRAME_WIDTH/3+20, FRAME_HEIGHT-20);
         g.drawString("Lives: "+Game.getLives(), 2*FRAME_WIDTH/3+20, FRAME_HEIGHT-20);
+        drawBar(g, 20, FRAME_HEIGHT - 70, 200, 20,
+              game.getPlayerShip().getHealth(), game.getPlayerShip().getMaxHealth(),
+              Color.GREEN, "Health: ");
+        drawBar(g, FRAME_WIDTH - 220, FRAME_HEIGHT - 70, 200, 20,
+              game.getPlayerShip().getFuel(), game.getPlayerShip().getMaxFuel(),
+              Color.YELLOW, "Fuel: ");
+        drawBar(g, 20, FRAME_HEIGHT - 130, 200, 20,
+              game.getPlayerShip().getShields(), game.getPlayerShip().getMaxShields(),
+              Color.BLUE, "Shields: ");
 
-        int barX = 20;
-        int barY = FRAME_HEIGHT - 60;
-        int barWidth = 200;
-        int barHeight = 20;
 
-        int currentHealth = (int) (game.getPlayerShip().getHealth() / (double) game.getPlayerShip().getMaxHealth() * barWidth);
-
-        //background
-        g.setColor(Color.DARK_GRAY);
-        g.fillRect(barX, barY, barWidth, barHeight);
-
-        //health
-        g.setColor(Color.RED);
-        g.fillRect(barX, barY, currentHealth, barHeight);
-
-        //border
-        g.setColor(Color.WHITE);
-        g.drawRect(barX, barY, barWidth, barHeight);
-
-        //label
-        g.setColor(Color.YELLOW);
-        g.drawString("Health: " + game.getPlayerShip().getHealth() + "/" + game.getPlayerShip().getMaxHealth(), barX, barY - 5);
         if (Game.getLives()==0)
             g.drawString("GAME OVER Score "+Game.getScore(), FRAME_WIDTH/2-100, FRAME_HEIGHT/2-20);
     }
@@ -82,5 +70,30 @@ public class View extends JComponent {
         return Constants.FRAME_SIZE;
     }
 
+
+    public void drawBar(Graphics2D g,
+                        int x, int y,
+                        int width, int height,
+                        int current, int max,
+                        Color color, String stat){
+
+        int filledWidth = (int) (current / (double) max * width);
+
+        //background
+        g.setColor(Color.DARK_GRAY);
+        g.fillRect(x, y, width, height);
+
+        //color
+        g.setColor(color);
+        g.fillRect(x, y, filledWidth, height);
+
+        //border
+        g.setColor(Color.WHITE);
+        g.drawRect(x, y, width, height);
+
+        //label
+        g.setColor(Color.YELLOW);
+        g.drawString(stat + current + "/" + max, x, y -5);
+    }
 
 }
