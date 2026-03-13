@@ -39,6 +39,7 @@ public class Game {
     private static Planet planet;
     private List<SpacePlanet> spacePlanets;
 
+    //TODO: add win condition;
     public Game() {
         objects = new ArrayList<GameObject>();
         ships = new ArrayList<Ship>();
@@ -100,6 +101,8 @@ public class Game {
 
         addSaucers();
         addConsumables();
+        //TODO: implement addArtifact()
+        addArtifact();
     }
 
     public void newLevel() {

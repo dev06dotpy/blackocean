@@ -26,6 +26,7 @@ public class View extends JComponent {
         bgTransf.scale(stretchx, stretchy);
 
     }
+    //TODO: add artifact counter
     public void paintComponent(Graphics g0) {
         super.paintComponent(g0);
         Graphics2D g = (Graphics2D) g0;
