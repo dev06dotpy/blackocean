@@ -1,10 +1,12 @@
 package blackOcean.core;
 
 import blackOcean.entities.GameObject;
+import utilities.Vector2D;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.util.Vector;
 
 import static blackOcean.core.Constants.*;
 
@@ -63,6 +65,8 @@ public class View extends JComponent {
               game.getPlayerShip().getShields(), game.getPlayerShip().getMaxShields(),
               Color.BLUE, "Shields: ");
 
+        drawMinimap(g);
+
 
         if (Game.getLives()==0)
             g.drawString("GAME OVER Score "+Game.getScore(), FRAME_WIDTH/2-100, FRAME_HEIGHT/2-20);
@@ -96,6 +100,61 @@ public class View extends JComponent {
         //label
         g.setColor(Color.YELLOW);
         g.drawString(stat + current + "/" + max, x, y -5);
+    }
+
+    public void drawMinimap(Graphics2D g){
+        int mapX = FRAME_WIDTH - 150;
+        int mapY = 10;
+        int mapWidth = 140;
+        int mapHeight = 140;
+
+        g.setColor(Color.BLACK);
+        g.fillRect(mapX, mapY, mapWidth, mapHeight);
+
+        g.setColor(Color.WHITE);
+        g.drawRect(mapX, mapY, mapWidth, mapHeight);
+
+        if(Game.getCurrentMode() == Game.GameMode.SPACE){
+            g.setColor(Color.CYAN);
+            for(Vector2D p: game.getPlanetPositions()){
+                int px = mapX +(int)(p.x / WORLD_WIDTH * mapWidth);
+                int py = mapY + (int)(p.y / WORLD_HEIGHT * mapHeight);
+                g.fillOval(px - 3, py - 3, 6, 6);
+            }
+
+            Vector2D playerPos = game.getPlayerShip().position;
+            int playerX = mapX + (int)(playerPos.x / WORLD_WIDTH * mapWidth);
+            int playerY = mapY + (int)(playerPos.y / WORLD_HEIGHT * mapHeight);
+
+            g.setColor(Color.RED);
+            g.fillOval(playerX - 3, playerY - 3, 8, 8);
+        }
+        else if(Game.getCurrentMode() == Game.GameMode.PLANET && Game.getCurrentPlanet() != null) {
+            boolean[][] walls = Game.getCurrentPlanet().getWalls();
+            double scaleX = mapWidth / (double) PLANET_WIDTH;
+            double scaleY = mapHeight / (double) PLANET_HEIGHT;
+
+            g.setColor(Color.DARK_GRAY);
+            for (int y = 0; y < PLANET_HEIGHT; y++) {
+                for (int x = 0; x < PLANET_WIDTH; x++) {
+                    if (walls[y][x]) {
+                        int rx = mapX + (int) Math.floor(x * scaleX);
+                        int ry = mapY + (int) Math.floor(y * scaleY);
+                        int rw = Math.max(1, (int) Math.ceil(scaleX));
+                        int rh = Math.max(1, (int) Math.ceil(scaleY));
+                        g.fillRect(rx, ry, rw, rh);
+                    }
+                }
+            }
+
+            Vector2D playerPos = game.getPlayerShip().position;
+            int playerX = mapX + (int) (playerPos.x / PLANET_PIXEL_WIDTH * mapWidth);
+            int playerY = mapY + (int) (playerPos.y / PLANET_PIXEL_HEIGHT * mapHeight);
+
+            g.setColor(Color.RED);
+            g.fillOval(playerX - 3, playerY - 3, 8, 8);
+
+        }
     }
 
 }

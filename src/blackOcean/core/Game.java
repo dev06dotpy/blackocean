@@ -302,6 +302,8 @@ public class Game {
         }
     }
 
+    public List<Vector2D> getPlanetPositions(){return new ArrayList<>();}
+
 
     public static int getScore() {
         return score;

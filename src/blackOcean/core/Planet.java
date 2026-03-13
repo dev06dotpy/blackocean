@@ -118,4 +118,6 @@ public class Planet {
                   }
             }
       }
+
+      public boolean[][] getWalls(){return walls;}
 }
