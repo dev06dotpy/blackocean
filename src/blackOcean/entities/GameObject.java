@@ -47,27 +47,22 @@ public abstract class GameObject {
             }
         } else if (Game.getCurrentMode() == Game.GameMode.PLANET) {
             Planet planet = Game.getCurrentPlanet();
-            if (planet != null && planet.collidesWithWall(position, radius)) {
-                position.addScaled(velocity, -DT);
-                velocity = new Vector2D(0, 0);
+
+            double oldX = position.x;
+            double oldY = position.y;
+
+            position.x += velocity.x * DT;
+            if(planet.collidesWithWall(position, radius)){
+                position.x = oldX;
+                velocity.x *= -0.2;
             }
+            position.y += velocity.y * DT;
+            if(planet.collidesWithWall(position, radius)){
+                position.y = oldY;
+                velocity.y *= -0.2;
+            }
+
         }
-        //position.wrap(FRAME_WIDTH, FRAME_HEIGHT);
-//        if(position.x < radius){
-//            position.x = radius;
-//            velocity.x = - velocity.x;
-//        }else if(position.x > WORLD_WIDTH - radius){
-//            position.x = WORLD_WIDTH - radius;
-//            velocity.x = - velocity.x;
-//        }
-//
-//        if(position.y < radius){
-//            position.y = radius;
-//            velocity.y = - velocity.y;
-//        }else if(position.y > WORLD_HEIGHT - radius){
-//            position.y = WORLD_HEIGHT - radius;
-//            velocity.y = - velocity.y;
-//        }
     }
 
     public void hit() {
@@ -84,13 +79,13 @@ public abstract class GameObject {
     }
 
     public boolean overlap(GameObject other) {
-        return this.position.distWithWrap(other.position, FRAME_WIDTH, FRAME_HEIGHT) < this.radius + other.radius;
+        return this.position.dist(other.position) < this.radius + other.radius;
     }
 
     public abstract void draw(Graphics2D g);
 
     public double distance(GameObject other) {
-        return position.distWithWrap(other.position, FRAME_WIDTH, FRAME_HEIGHT);
+        return position.dist(other.position);
     }
 
     public String toString() {

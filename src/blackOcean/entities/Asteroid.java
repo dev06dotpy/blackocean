@@ -46,7 +46,7 @@ public class Asteroid extends GameObject {
     }
 
     public Asteroid() {
-        super(new Vector2D(Math.random() * WORLD_WIDTH, Math.random() + WORLD_HEIGHT), new Vector2D(0, 0), 0);
+        super(new Vector2D(Math.random() * WORLD_WIDTH, Math.random() * WORLD_HEIGHT), new Vector2D(0, 0), 0);
         double vx = Math.random() * MAX_SPEED;
         if (Math.random() < 0.5) vx *= -1;
         double vy = Math.random() * MAX_SPEED;

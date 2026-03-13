@@ -25,27 +25,22 @@ public class View extends JComponent {
 
     }
     public void paintComponent(Graphics g0) {
+        super.paintComponent(g0);
         Graphics2D g = (Graphics2D) g0;
-        //g.drawImage(im, bgTransf, null);
-        g.setColor(BG_COLOR);
-        g.fillRect(0,0,getWidth(), getHeight());
 
         AffineTransform old = g.getTransform();
 
         int cameraX = (int) game.getPlayerShip().position.x - FRAME_WIDTH / 2;
         int cameraY = (int) game.getPlayerShip().position.y - FRAME_HEIGHT / 2;
-
         g.translate(-cameraX, -cameraY);
 
-        g.setColor(Color.WHITE);
-        g.drawRect(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
+        if(Game.getCurrentMode() == Game.GameMode.PLANET && Game.getCurrentPlanet() != null ) Game.getCurrentPlanet().draw(g);
+        else if (Game.getCurrentMode() == Game.GameMode.SPACE){
+            g.setColor(Color.WHITE);
+            g.drawRect(0, 0, WORLD_WIDTH - 1, WORLD_HEIGHT - 1);
 
-        if (game.getCurrentMode() == Game.GameMode.PLANET && game.getCurrentPlanet() != null) {
-            game.getCurrentPlanet().draw(g);
-        } else {
-            for (GameObject obj : game.objects) {
-                obj.draw(g);
-            }
+            g.setColor(BG_COLOR);
+            g.fillRect(0,0,WORLD_WIDTH, WORLD_HEIGHT);
         }
         synchronized (Game.class) {
             for (GameObject object : game.objects)
