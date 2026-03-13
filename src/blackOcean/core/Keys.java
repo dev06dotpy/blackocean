@@ -36,6 +36,9 @@ public class Keys extends KeyAdapter implements Controller {
                   case KeyEvent.VK_SPACE:
                         action.shoot = true;
                         break;
+                  case KeyEvent.VK_E:
+                        action.interact = true;
+                        break;
                   case KeyEvent.VK_P:
                         game.togglePlanetMode();
                         break;

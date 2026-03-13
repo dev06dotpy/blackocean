@@ -16,6 +16,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Vector;
 
 import static blackOcean.core.Constants.*;
 
@@ -36,9 +37,12 @@ public class Game {
     public enum GameMode{ SPACE, PLANET}
     private static GameMode mode = GameMode.SPACE;
     private static Planet planet;
+    private List<SpacePlanet> spacePlanets;
+
     public Game() {
         objects = new ArrayList<GameObject>();
         ships = new ArrayList<Ship>();
+        spacePlanets = new ArrayList<>();
         for (int i = 0; i < N_INITIAL_ASTEROIDS; i++) {
             objects.add(new Asteroid());
 
@@ -59,13 +63,13 @@ public class Game {
 //
 //        addSaucers();
 //        addConsumables();
-
-        spaceMode();
+          spaceMode();
     }
 
     public void spaceMode(){
         objects.clear();
         ships.clear();
+        spacePlanets.clear();
 
         planet = null;
         mode = GameMode.SPACE;
@@ -76,7 +80,7 @@ public class Game {
         objects.add(playerShip);
         ships.add(playerShip);
 
-        addSaucers();
+        addSpacePlanet();
         addConsumables();
     }
 
@@ -192,6 +196,17 @@ public class Game {
     }
 
     public void update() {
+
+          if(mode == GameMode.SPACE && ctrl.action().interact) {
+                SpacePlanet targetPlanet = getNearbyPlanet();
+
+                if(targetPlanet != null) {
+                      ctrl.action().interact = false;
+                      planetMode();
+                      return;
+                }
+          }
+
         for (int i = 0; i < objects.size(); i++) {
             GameObject o1 = objects.get(i);
             if (o1.dead) continue;
@@ -301,6 +316,48 @@ public class Game {
             else spaceMode();
         }
     }
+
+    private void addSpacePlanet(){
+          Vector2D planetPos = new Vector2D(WORLD_WIDTH * 0.75, WORLD_HEIGHT * 0.5);
+          SpacePlanet spacePlanet = new SpacePlanet(planetPos);
+
+          spacePlanets.add(spacePlanet);
+          objects.add(spacePlanet);
+          addPlanetDefenders(spacePlanet);
+    }
+
+    private void addPlanetDefenders(SpacePlanet planet){
+          for(int i = 0; i < 3; i++){
+                Controller ctrl = (i == 0 ? new AimNShoot(this) : new RandomAction());
+                Color colourBody = (i == 0 ? Color.GREEN : Color.PINK);
+
+                Saucer saucer = new Saucer(ctrl, colourBody, Color.WHITE);
+                double angle = (2 * Math.PI / 3) * i;
+                double distanceFromPlanet = 90;
+
+                saucer.position = new Vector2D(
+                      planet.position.x + Math.cos(angle) * distanceFromPlanet,
+                      planet.position.y + Math.sin(angle) * distanceFromPlanet
+                );
+
+                saucer.setHomePlanet(planet);
+                planet.addDefender(saucer);
+
+                if(ctrl instanceof AimNShoot) ((AimNShoot) ctrl).setShip(saucer);
+
+                objects.add(saucer);
+                ships.add(saucer);
+          }
+    }
+
+    private SpacePlanet getNearbyPlanet(){
+          for(SpacePlanet sp : spacePlanets){
+                if(sp.isUnlocked() && sp.playerInRange(playerShip)) return sp;
+          }
+          return null;
+    }
+
+
 
     public List<Vector2D> getPlanetPositions(){return new ArrayList<>();}
 

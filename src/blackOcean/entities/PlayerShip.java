@@ -73,7 +73,7 @@ public class PlayerShip extends Ship {
         fuelDrain++;
 
         // drain 1 fuel every 20 ticks
-        if (fuelDrain >= 5) {
+        if (fuelDrain >= 20) {
             fuel = Math.max(0, fuel - 1);
             fuelDrain = 0;
         }

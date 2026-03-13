@@ -5,10 +5,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 
 import static blackOcean.core.Constants.*;
-import static utilities.SoundManager.bangMedium;
 
 import blackOcean.controllers.Controller;
-import utilities.SoundManager;
 import utilities.Vector2D;
 
 public class Saucer extends Ship {
@@ -18,6 +16,7 @@ public class Saucer extends Ship {
     public double damage;
 
     public Color colorBelt;
+    private SpacePlanet homePlanet;
     public Saucer(Controller ctrl, Color colorBody, Color colorBelt){
         super(new Vector2D(WORLD_WIDTH*Math.random(), WORLD_HEIGHT*Math.random()), new Vector2D(0, -1), 10);
         this.ctrl = ctrl;
@@ -27,6 +26,10 @@ public class Saucer extends Ship {
         color = colorBody;
         this.colorBelt = colorBelt;
     }
+
+    public void setHomePlanet(SpacePlanet planet){this.homePlanet = planet;}
+
+    public SpacePlanet getHomePlanet(SpacePlanet planet){return homePlanet;}
 
     public void draw(Graphics2D g) {
         AffineTransform at = g.getTransform();
