@@ -1,6 +1,10 @@
 package blackOcean.core;
 
+import blackOcean.entities.Consumables.Artifact;
 import blackOcean.entities.GameObject;
+import blackOcean.entities.PlayerShip;
+import blackOcean.entities.Saucer;
+import blackOcean.entities.SpacePlanet;
 import utilities.Vector2D;
 
 import javax.swing.*;
@@ -13,10 +17,10 @@ import static blackOcean.core.Constants.*;
 public class View extends JComponent {
     public static final Color BG_COLOR = Color.BLACK;
     private Game game;
-    Image im = Constants.MILKYWAY2;
+    Image im = Constants.SPACE;
     AffineTransform bgTransf;
 
-    public View(Game game){
+    public View(Game game) {
         this.game = game;
         double imWidth = im.getWidth(null);
         double imHeight = im.getHeight(null);
@@ -26,7 +30,7 @@ public class View extends JComponent {
         bgTransf.scale(stretchx, stretchy);
 
     }
-    //TODO: add artifact counter
+
     public void paintComponent(Graphics g0) {
         super.paintComponent(g0);
         Graphics2D g = (Graphics2D) g0;
@@ -37,13 +41,14 @@ public class View extends JComponent {
         int cameraY = (int) game.getPlayerShip().position.y - FRAME_HEIGHT / 2;
         g.translate(-cameraX, -cameraY);
 
-        if(Game.getCurrentMode() == Game.GameMode.PLANET && Game.getCurrentPlanet() != null ) Game.getCurrentPlanet().draw(g);
-        else if (Game.getCurrentMode() == Game.GameMode.SPACE){
+        if (Game.getCurrentMode() == Game.GameMode.PLANET && Game.getCurrentPlanet() != null)
+            Game.getCurrentPlanet().draw(g);
+        else if (Game.getCurrentMode() == Game.GameMode.SPACE) {
             g.setColor(Color.WHITE);
             g.drawRect(0, 0, WORLD_WIDTH - 1, WORLD_HEIGHT - 1);
 
             g.setColor(BG_COLOR);
-            g.fillRect(0,0,WORLD_WIDTH, WORLD_HEIGHT);
+            g.fillRect(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
         }
         synchronized (Game.class) {
             for (GameObject object : game.objects)
@@ -52,10 +57,12 @@ public class View extends JComponent {
 
         g.setTransform(old);
 
-        g.setColor(Color.YELLOW);g.setFont(new Font("dialog", Font.BOLD, 20));
-        g.drawString("Level: "+Game.getLevel(), 20, FRAME_HEIGHT-20);
-        g.drawString("Score: "+Game.getScore(), FRAME_WIDTH/3+20, FRAME_HEIGHT-20);
-        g.drawString("Lives: "+Game.getLives(), 2*FRAME_WIDTH/3+20, FRAME_HEIGHT-20);
+        g.setColor(Color.YELLOW);
+        g.setFont(new Font("dialog", Font.BOLD, 20));
+        g.drawString("Level: " + Game.getLevel(), 20, FRAME_HEIGHT - 20);
+        g.drawString("Score: " + Game.getScore(), FRAME_WIDTH / 3 + 20, FRAME_HEIGHT - 20);
+        g.drawString("Lives: " + Game.getLives(), 2 * FRAME_WIDTH / 3 + 20, FRAME_HEIGHT - 20);
+        g.drawString("Artifacts: " + Game.getArtifacts(), 20, 30);
         drawBar(g, 20, FRAME_HEIGHT - 70, 200, 20,
               game.getPlayerShip().getHealth(), game.getPlayerShip().getMaxHealth(),
               Color.GREEN, "Health: ");
@@ -68,12 +75,13 @@ public class View extends JComponent {
 
         drawMinimap(g);
 
-
-        if (Game.getLives()==0)
-            g.drawString("GAME OVER Score "+Game.getScore(), FRAME_WIDTH/2-100, FRAME_HEIGHT/2-20);
+        if (Game.hasPlayerWon()) {
+            g.drawString("YOU WIN! Artifacts Collected: " + Game.getArtifacts(), FRAME_WIDTH / 2 - 170, FRAME_HEIGHT / 2 - 20);
+        } else if (Game.getLives() == 0)
+            g.drawString("GAME OVER Score " + Game.getScore(), FRAME_WIDTH / 2 - 100, FRAME_HEIGHT / 2 - 20);
     }
 
-    public Dimension getPreferredSize(){
+    public Dimension getPreferredSize() {
         return Constants.FRAME_SIZE;
     }
 
@@ -82,7 +90,7 @@ public class View extends JComponent {
                         int x, int y,
                         int width, int height,
                         int current, int max,
-                        Color color, String stat){
+                        Color color, String stat) {
 
         int filledWidth = (int) (current / (double) max * width);
 
@@ -100,10 +108,10 @@ public class View extends JComponent {
 
         //label
         g.setColor(Color.YELLOW);
-        g.drawString(stat + current + "/" + max, x, y -5);
+        g.drawString(stat + current + "/" + max, x, y - 5);
     }
 
-    public void drawMinimap(Graphics2D g){
+    public void drawMinimap(Graphics2D g) {
         int mapX = FRAME_WIDTH - 150;
         int mapY = 10;
         int mapWidth = 140;
@@ -115,22 +123,21 @@ public class View extends JComponent {
         g.setColor(Color.WHITE);
         g.drawRect(mapX, mapY, mapWidth, mapHeight);
 
-        if(Game.getCurrentMode() == Game.GameMode.SPACE){
+        if (Game.getCurrentMode() == Game.GameMode.SPACE) {
             g.setColor(Color.CYAN);
-            for(Vector2D p: game.getPlanetPositions()){
-                int px = mapX +(int)(p.x / WORLD_WIDTH * mapWidth);
-                int py = mapY + (int)(p.y / WORLD_HEIGHT * mapHeight);
+            for (Vector2D p : game.getPlanetPositions()) {
+                int px = mapX + (int) (p.x / WORLD_WIDTH * mapWidth);
+                int py = mapY + (int) (p.y / WORLD_HEIGHT * mapHeight);
                 g.fillOval(px - 3, py - 3, 6, 6);
             }
 
             Vector2D playerPos = game.getPlayerShip().position;
-            int playerX = mapX + (int)(playerPos.x / WORLD_WIDTH * mapWidth);
-            int playerY = mapY + (int)(playerPos.y / WORLD_HEIGHT * mapHeight);
+            int playerX = mapX + (int) (playerPos.x / WORLD_WIDTH * mapWidth);
+            int playerY = mapY + (int) (playerPos.y / WORLD_HEIGHT * mapHeight);
 
             g.setColor(Color.RED);
             g.fillOval(playerX - 3, playerY - 3, 8, 8);
-        }
-        else if(Game.getCurrentMode() == Game.GameMode.PLANET && Game.getCurrentPlanet() != null) {
+        } else if (Game.getCurrentMode() == Game.GameMode.PLANET && Game.getCurrentPlanet() != null) {
             boolean[][] walls = Game.getCurrentPlanet().getWalls();
             double scaleX = mapWidth / (double) PLANET_WIDTH;
             double scaleY = mapHeight / (double) PLANET_HEIGHT;
@@ -148,14 +155,33 @@ public class View extends JComponent {
                 }
             }
 
-            Vector2D playerPos = game.getPlayerShip().position;
-            int playerX = mapX + (int) (playerPos.x / PLANET_PIXEL_WIDTH * mapWidth);
-            int playerY = mapY + (int) (playerPos.y / PLANET_PIXEL_HEIGHT * mapHeight);
+//            Vector2D playerPos = game.getPlayerShip().position;
+//            int playerX = mapX + (int) (playerPos.x / PLANET_PIXEL_WIDTH * mapWidth);
+//            int playerY = mapY + (int) (playerPos.y / PLANET_PIXEL_HEIGHT * mapHeight);
 
-            g.setColor(Color.RED);
-            g.fillOval(playerX - 3, playerY - 3, 8, 8);
+            for (GameObject obj : game.objects) {
+                int dotX = mapX + (int) ((obj.position.x / (double) PLANET_PIXEL_WIDTH) * mapWidth);
+                int dotY = mapY + (int) ((obj.position.y / (double) PLANET_PIXEL_HEIGHT) * mapHeight);
 
+                if (obj instanceof PlayerShip) {
+                    g.setColor(Color.CYAN);
+                    g.fillOval(dotX - 3, dotY - 3, 6, 6);
+                } else if (obj instanceof Artifact) {
+                    g.setColor(Color.MAGENTA);
+                    g.fillOval(dotX - 3, dotY - 3, 6, 6);
+                } else if (obj instanceof SpacePlanet) {
+                    g.setColor(Color.GREEN);
+                    g.fillOval(dotX - 4, dotY - 4, 8, 8);
+                } else if (obj instanceof Saucer) {
+                    g.setColor(Color.RED);
+                    g.fillOval(dotX - 2, dotY - 2, 4, 4);
+                }
+
+//            g.setColor(Color.RED);
+//            g.fillOval(playerX - 3, playerY - 3, 8, 8);
+
+            }
         }
-    }
 
+    }
 }

@@ -17,6 +17,7 @@ public class SpacePlanet extends GameObject {
             super(position, new Vector2D(0, 0), RADIUS);
             defenders = new ArrayList<>();
             unlocked = false;
+            System.out.println("Planet current position: " + position.x + ", " + position.y);
       }
 
       public void addDefender(Saucer saucer){defenders.add(saucer);}

@@ -27,19 +27,19 @@ public class Game {
     PlayerShip playerShip;
     Keys ctrl;
     Controller controller;
-
-    //private Planet planet;
-
     private static int score = 0;
     private static int lives = 50;  // should be about 5 but made large during testing of collision handling
     private static int level = 1;
+    private static int artifacts = 0;
+    private static int artifactsNeeded = 3;
+    public static boolean winState = false;
     public static boolean gameOver = false;
     public enum GameMode{ SPACE, PLANET}
     private static GameMode mode = GameMode.SPACE;
     private static Planet planet;
+    private static boolean returnToSpace;
     private List<SpacePlanet> spacePlanets;
 
-    //TODO: add win condition;
     public Game() {
         objects = new ArrayList<GameObject>();
         ships = new ArrayList<Ship>();
@@ -82,7 +82,7 @@ public class Game {
         ships.add(playerShip);
 
         addSpacePlanet();
-        addConsumables();
+        objects.add(addConsumables());
     }
 
     public void planetMode(){
@@ -100,9 +100,8 @@ public class Game {
         ships.add(playerShip);
 
         addSaucers();
-        addConsumables();
-        //TODO: implement addArtifact()
-        addArtifact();
+        objects.add(addConsumables());
+        objects.add(addArtifact());
     }
 
     public void newLevel() {
@@ -268,33 +267,12 @@ public class Game {
             newLife();
         }
 
-    }
+        if(returnToSpace && mode == GameMode.PLANET){
+            returnToSpace = false;
+            spaceMode();
+        }
 
-//    private void applyWorldRules(GameObject o) {
-//        if (mode == GameMode.SPACE) {
-//            if (o.position.x < o.radius) {
-//                o.position.x = o.radius;
-//                o.velocity.x = -o.velocity.x;
-//            } else if (o.position.x > WORLD_WIDTH - o.radius) {
-//                o.position.x = WORLD_WIDTH - o.radius;
-//                o.velocity.x = -o.velocity.x;
-//            }
-//
-//            if (o.position.y < o.radius) {
-//                o.position.y = o.radius;
-//                o.velocity.y = -o.velocity.y;
-//            } else if (o.position.y > WORLD_HEIGHT - o.radius) {
-//                o.position.y = WORLD_HEIGHT - o.radius;
-//                o.velocity.y = -o.velocity.y;
-//            }
-//
-//        } else if (mode == GameMode.PLANET) {
-//            if (planet != null && planet.collidesWithWall(o.position, o.radius)) {
-//                o.position.addScaled(o.velocity, -DT);
-//                o.velocity = new Vector2D(0, 0);
-//            }
-//        }
-//    }
+    }
 
     public static void incScore(int inc) {
         int oldScore = score;
@@ -360,26 +338,42 @@ public class Game {
           return null;
     }
 
+    public static void collectArtifact(){
+        artifacts++;
+        System.out.println("Artifacts collected: " + artifacts);
+
+        if(artifacts >= artifactsNeeded){
+            winState = true;
+            gameOver = true;
+        }
+        else{ returnToSpace = true;}
+    }
+
+    private GameObject addArtifact(){
+        double spawnRadius = 14;
+        Vector2D pos = planet.randomCavePosition(spawnRadius);
+        return new blackOcean.entities.Consumables.Artifact(pos);
+    }
+
 
 
     public List<Vector2D> getPlanetPositions(){return new ArrayList<>();}
 
 
-    public static int getScore() {
-        return score;
-    }
+    public static int getScore() {return score;}
 
-    public static int getLevel() {
-        return level;
-    }
+    public static int getLevel() {return level;}
 
-    public static int getLives() {
-        return lives;
-    }
+    public static int getLives() {return lives;}
 
     public PlayerShip getPlayerShip(){return playerShip;}
 
     public static GameMode getCurrentMode(){return mode;}
+
     public static Planet getCurrentPlanet(){return planet;}
+
+    public static int getArtifacts(){return artifacts;}
+
+    public static boolean hasPlayerWon(){return winState;}
 }
 

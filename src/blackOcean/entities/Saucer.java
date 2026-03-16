@@ -27,6 +27,8 @@ public class Saucer extends Ship {
         bullet = null;
         color = colorBody;
         this.colorBelt = colorBelt;
+        this.maxHealth = 80;
+        this.health = 80;
     }
 
     public void setHomePlanet(SpacePlanet planet){
@@ -37,12 +39,12 @@ public class Saucer extends Ship {
     private void keepNearPlanet(){
         if(!planetDefender || homePlanet == null) return;
 
-        Vector2D toPlanet = homePlanet.position.subtract(position);
+        Vector2D toPlanet = new Vector2D(homePlanet.position).subtract(position);
         double dist = toPlanet.mag();
 
         if (dist > maxDistance){
             Vector2D pull = toPlanet.normalise().mult(0.5);
-            velocity = velocity.add(pull);
+            velocity.add(pull);
 
             double speed = velocity.mag();
             double maxSpeed = 4;
@@ -73,7 +75,7 @@ public class Saucer extends Ship {
     }
 
     public void hit() {
-        super.hit();
+        super.hit(10);
         //SoundManager.play(bangMedium);
     }
 

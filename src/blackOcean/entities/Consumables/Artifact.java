@@ -10,6 +10,7 @@ public class Artifact extends Consumable{
 
       public Artifact(Vector2D position){
             super(position, 30, Color.red);
+            System.out.println("Artifact spawned at: " + position.x + ", " + position.y);
       };
 
       @Override
@@ -20,5 +21,21 @@ public class Artifact extends Consumable{
       }
 
       @Override
-      public void draw(Graphics2D g){}
+      public void draw(Graphics2D g){
+            g.setColor(Color.PINK);
+            g.fillOval(
+                  (int)(position.x - radius),
+                  (int)(position.y - radius),
+                  (int)(2 * radius),
+                  (int)(2 * radius)
+            );
+
+            g.setColor(Color.WHITE);
+            g.drawOval(
+                  (int)(position.x - radius),
+                  (int)(position.y - radius),
+                  (int)(2 * radius),
+                  (int)(2 * radius)
+            );
+      }
 }
