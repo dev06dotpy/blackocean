@@ -23,7 +23,7 @@ public abstract class Ship extends GameObject {
 
     public static final double STEER_RATE = 2 * Math.PI;
 
-    public static final double MAG_ACC = 200;
+    public static double MAG_ACC = 200;
 
     public static final double DRAG = 0.01;
 

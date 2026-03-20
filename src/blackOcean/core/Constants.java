@@ -21,34 +21,39 @@ public class Constants {
     public static Image ASTEROID, SPACE, PLANET_LOCK, PLANET_UNLOCK;
     public static Image PLAYERSHIP, SAUCER1, SAUCER2, BULLET;
     public static Image FUEL_PACK, HEALTH_PACK, SHIELD_PACK, LANDMINE, ARTIFACT;
+    public static Image POWER_UP, BLASTER_MOD;
     public static Image SNIPER_MOD, DOUBLE_DAMAGE_MOD, BURST_FIRE_MOD;
-    public static Image WALL1, WALL2, WALL3, WALL4;
-    static {
+    public static Image WALL1;
+    public static Image HEALTH_ICON, SHIELD_ICON, FUEL_ICON;
+    static{
         try {
             ASTEROID = ImageManager.loadImage("asteroid1.png");
-            SPACE = ImageManager.loadImage("space.png");
+            SPACE = ImageManager.loadImage("space_background.jpg");
             PLANET_LOCK = ImageManager.loadImage("planet08.png");
             PLANET_UNLOCK = ImageManager.loadImage("planet01.png");
 
             PLAYERSHIP = ImageManager.loadImage("playerShip1_blue.png");
             SAUCER1 = ImageManager.loadImage("enemyRed5.png");
             SAUCER2 = ImageManager.loadImage("enemyGreen3.png");
-            BULLET = ImageManager.loadImage("bullet.jpg");
+            BULLET = ImageManager.loadImage("bullet.png");
             ARTIFACT = ImageManager.loadImage("artifact.png");
 
-            FUEL_PACK = ImageManager.loadImage("health_pack.png");
-            SHIELD_PACK = ImageManager.loadImage("shield_pack.jpg");
-            HEALTH_PACK = ImageManager.loadImage("fuel.jpg");
-            LANDMINE = ImageManager.loadImage("landmine.jpg");
+            HEALTH_PACK = ImageManager.loadImage("health_pack.png");
+            SHIELD_PACK = ImageManager.loadImage("shield_pack.png");
+            FUEL_PACK = ImageManager.loadImage("fuel.png");
+            LANDMINE = ImageManager.loadImage("landmine.png");
+            POWER_UP = ImageManager.loadImage("power-up.png");
+            BLASTER_MOD = ImageManager.loadImage("blaster.png");
 
 //            SNIPER_MOD = ImageManager.loadImage("");
 //            DOUBLE_DAMAGE_MOD = ImageManager.loadImage("");
 //            BURST_FIRE_MOD = ImageManager.loadImage("");
 
-            WALL1 = ImageManager.loadImage("platformIndustrial_001.png");
-            WALL2 = ImageManager.loadImage("platformIndustrial_002.png");
-            WALL3 = ImageManager.loadImage("platformIndustrial_003.png");
-            WALL4 = ImageManager.loadImage("platformIndustrial_004.png");
+            WALL1 = ImageManager.loadImage("platformIndustrial_005.png");
+
+            HEALTH_ICON = ImageManager.loadImage("hospital.png");
+            SHIELD_ICON = ImageManager.loadImage("health-insurance.png");
+            FUEL_ICON = ImageManager.loadImage("gasoline-pump.png");
 
         } catch (IOException e) { e.printStackTrace(); }
     }

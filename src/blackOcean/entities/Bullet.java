@@ -3,9 +3,11 @@ package blackOcean.entities;
 import utilities.Vector2D;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 
 
 import static blackOcean.core.Constants.DT;
+import static blackOcean.core.Constants.BULLET;
 
 public class Bullet extends GameObject {
     private double lifetime;
@@ -29,13 +31,25 @@ public class Bullet extends GameObject {
 
     @Override
     public void draw(Graphics2D g) {
+        if (BULLET != null) {
+            int drawSize = 20;
+            AffineTransform t0 = g.getTransform();
+            g.translate(position.x, position.y);
+            g.rotate(velocity.angle());
+            g.drawImage(BULLET, -drawSize / 2, -drawSize / 2, drawSize, drawSize, null);
+            g.setTransform(t0);
+            return;
+        }
         g.setColor(Color.WHITE);
         g.fillOval((int) position.x - RADIUS, (int) position.y - RADIUS, 2 * RADIUS, 2 * RADIUS);
-
 
     }
 
     public String toString() {
         return "Bullet; " + super.toString();
+    }
+
+    public void setLifetime(double lifetime) {
+        this.lifetime = Math.max(0.1, lifetime);
     }
 }

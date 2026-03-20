@@ -78,10 +78,10 @@ public class Asteroid extends GameObject {
         super.hit();
 
         if (isLarge) {
-            //SoundManager.play(SoundManager.bangMedium);
+            SoundManager.play(SoundManager.bangMedium);
             spawn();
         } else {
-            //SoundManager.play(SoundManager.bangSmall);
+            SoundManager.play(SoundManager.bangSmall);
         }
     }
 

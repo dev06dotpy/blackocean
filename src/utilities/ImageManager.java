@@ -18,17 +18,25 @@ public class ImageManager {
         return images.get(s);
     }
 
-    public static Image loadImage(String fname) throws IOException {
-        BufferedImage img = null;
-        img = ImageIO.read(new File(path + fname + ext));
-        images.put(fname, img);
-        System.out.println("loaded image");
-        return img;
-    }
+//    public static Image loadImage(String fname) throws IOException {
+//        BufferedImage img = ImageIO.read(new File(path + fname));
+//        images.put(fname, img);
+//        System.out.println("loaded image");
+//        return img;
+//    }
+public static Image loadImage(String fname) throws IOException {
+    File file = new File(path + fname);
+    System.out.println("Trying to load: " + file.getAbsolutePath());
+    System.out.println("Exists? " + file.exists());
+
+    BufferedImage img = ImageIO.read(file);
+    images.put(fname, img);
+    System.out.println("Loaded image: " + fname);
+    return img;
+}
 
     public static Image loadImage(String imName, String fname) throws IOException {
-        BufferedImage img = null;
-        img = ImageIO.read(new File(path + fname + ext));
+        BufferedImage img = ImageIO.read(new File(path + fname));
         images.put(imName, img);
         return img;
     }

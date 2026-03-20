@@ -4,9 +4,14 @@ import blackOcean.controllers.AimNShoot;
 import blackOcean.controllers.RandomAction;
 import blackOcean.controllers.Controller;
 import blackOcean.entities.Consumables.Consumable;
-import blackOcean.entities.Consumables.FuelTank;
-import blackOcean.entities.Consumables.HealthPack;
-import blackOcean.entities.Consumables.ShieldBattery;
+import blackOcean.entities.Consumables.Perks.FuelEfficiency;
+import blackOcean.entities.Consumables.Perks.ReinforcedHull;
+import blackOcean.entities.Consumables.Perks.SonicSpeed;
+import blackOcean.entities.Consumables.WeaponMods.FMJRounds;
+import blackOcean.entities.Consumables.WeaponMods.RailGun;
+import blackOcean.entities.Consumables.Resources.FuelTank;
+import blackOcean.entities.Consumables.Resources.HealthPack;
+import blackOcean.entities.Consumables.Resources.ShieldBattery;
 import blackOcean.systems.CollisionSystem;
 import blackOcean.entities.*;
 import utilities.JEasyFrame;
@@ -16,7 +21,6 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Vector;
 
 import static blackOcean.core.Constants.*;
 
@@ -28,7 +32,7 @@ public class Game {
     Keys ctrl;
     Controller controller;
     private static int score = 0;
-    private static int lives = 50;  // should be about 5 but made large during testing of collision handling
+    private static int lives = 5;
     private static int level = 1;
     private static int artifacts = 0;
     private static int artifactsNeeded = 3;
@@ -68,6 +72,7 @@ public class Game {
     }
 
     public void spaceMode(){
+        PlayerShip previousShip = playerShip;
         objects.clear();
         ships.clear();
         spacePlanets.clear();
@@ -78,6 +83,7 @@ public class Game {
         for(int i = 0; i < N_INITIAL_ASTEROIDS + 2 * (level - 1); i++) objects.add(new Asteroid());
 
         playerShip = new PlayerShip(controller);
+        playerShip.copyUpgradesFrom(previousShip);
         objects.add(playerShip);
         ships.add(playerShip);
 
@@ -86,6 +92,7 @@ public class Game {
     }
 
     public void planetMode(){
+        PlayerShip previousShip = playerShip;
         objects.clear();
         ships.clear();
 
@@ -94,6 +101,7 @@ public class Game {
         mode = GameMode.PLANET;
 
         playerShip = new PlayerShip(controller);
+        playerShip.copyUpgradesFrom(previousShip);
         playerShip.position = planet.spawnPosition();
         playerShip.velocity = new Vector2D(0, 0);
         objects.add(playerShip);
@@ -101,9 +109,11 @@ public class Game {
 
         addSaucers();
         objects.add(addConsumables());
+        addPlanetPerks();
         objects.add(addArtifact());
     }
 
+    // TODO: Make each level harder and add every time you collect an artifact level++. Level++ also increases enemy ships health
     public void newLevel() {
         level++;
         try {
@@ -130,7 +140,9 @@ public class Game {
     }
 
     private void addSaucers() {
-        for (int i = 0; i < 3; i++) {
+        int saucerCount = getSaucerCount();
+        int saucerMaxHealth = getSaucerMaxHealth();
+        for (int i = 0; i < saucerCount; i++) {
             Controller ctrl = (i % 3 != 0 ? new RandomAction() : new AimNShoot(this));
             Color colorBody = (i % 3 != 0 ? Color.PINK : Color.GREEN);
             Random r = new Random();
@@ -144,7 +156,7 @@ public class Game {
                       r.nextInt(WORLD_HEIGHT)
                 );
             }
-            Ship saucer = new Saucer(ctrl, colorBody, Color.white);
+            Ship saucer = new Saucer(ctrl, colorBody, Color.white, saucerMaxHealth);
             saucer.position = pos;
             if (i % 3 == 0) {
                 ((AimNShoot) ctrl).setShip(saucer);
@@ -166,25 +178,39 @@ public class Game {
         Random random = new Random();
         int chance = random.nextInt(10);
 
-        Vector2D pos;
-        double spawnRadius = 12;
-
-        if(mode == GameMode.PLANET && planet != null) pos = planet.randomCavePosition(spawnRadius);
-        else{
-            pos = new Vector2D(
-              random.nextInt(WORLD_WIDTH),
-              random.nextInt(WORLD_HEIGHT)
-            );
-        }
+        Vector2D pos = randomConsumablePosition();
         if(chance < 4) return new HealthPack(pos);
         else if(chance < 8) return new FuelTank(pos);
         else return new ShieldBattery(pos);
     }
 
+    private Vector2D randomConsumablePosition() {
+        Random random = new Random();
+        double spawnRadius = 12;
+
+        if(mode == GameMode.PLANET && planet != null) {
+            return planet.randomCavePosition(spawnRadius);
+        }
+
+        return new Vector2D(
+                random.nextInt(WORLD_WIDTH),
+                random.nextInt(WORLD_HEIGHT)
+        );
+    }
+
+    private void addPlanetPerks() {
+        if (mode != GameMode.PLANET) return;
+        objects.add(new FuelEfficiency(randomConsumablePosition()));
+        objects.add(new ReinforcedHull(randomConsumablePosition()));
+        objects.add(new SonicSpeed(randomConsumablePosition()));
+        objects.add(new FMJRounds(randomConsumablePosition()));
+        objects.add(new RailGun(randomConsumablePosition()));
+    }
+
     public static void main(String[] args) {
         Game game = new Game();
         View view = new View(game);
-        new JEasyFrame(view, "Game with AI").addKeyListener(game.ctrl);
+        new JEasyFrame(view, "blackocean").addKeyListener(game.ctrl);
         while (!gameOver) {
             game.update();
             view.repaint();
@@ -221,7 +247,6 @@ public class Game {
             }
         }
         List<GameObject> alive = new ArrayList<>();
-        boolean noEnemies = true;
         boolean noPlayer = true;
         int consumableCount = 0;
         for (GameObject o : objects) {
@@ -238,7 +263,6 @@ public class Game {
             }
 
             if (!o.dead) {
-                if (o instanceof Asteroid || o instanceof Saucer) noEnemies = false;
                 if (o instanceof PlayerShip) noPlayer = false;
                 if (o instanceof Consumable) consumableCount++;
                 alive.add(o);
@@ -261,9 +285,7 @@ public class Game {
             objects.clear();
             objects.addAll(alive);
         }
-        if (noEnemies) {
-            newLevel();
-        } else if (noPlayer) {
+        if (noPlayer) {
             newLife();
         }
 
@@ -308,13 +330,15 @@ public class Game {
     }
 
     private void addPlanetDefenders(SpacePlanet planet){
-          for(int i = 0; i < 3; i++){
+          int defenderCount = getSaucerCount();
+          int saucerMaxHealth = getSaucerMaxHealth();
+          for(int i = 0; i < defenderCount; i++){
                 Controller ctrl = (i == 0 ? new AimNShoot(this) : new RandomAction());
                 Color colourBody = (i == 0 ? Color.GREEN : Color.PINK);
 
-                Saucer saucer = new Saucer(ctrl, colourBody, Color.WHITE);
-                double angle = (2 * Math.PI / 3) * i;
-                double distanceFromPlanet = 90;
+                Saucer saucer = new Saucer(ctrl, colourBody, Color.WHITE, saucerMaxHealth);
+                double angle = (2 * Math.PI / defenderCount) * i;
+                double distanceFromPlanet = SpacePlanet.RADIUS + saucer.radius + 30;
 
                 saucer.position = new Vector2D(
                       planet.position.x + Math.cos(angle) * distanceFromPlanet,
@@ -340,7 +364,9 @@ public class Game {
 
     public static void collectArtifact(){
         artifacts++;
+        level++;
         System.out.println("Artifacts collected: " + artifacts);
+        System.out.println("Level " + level);
 
         if(artifacts >= artifactsNeeded){
             winState = true;
@@ -355,10 +381,11 @@ public class Game {
         return new blackOcean.entities.Consumables.Artifact(pos);
     }
 
+    private int getSaucerCount() {return 5 + (level - 1) * 2;}
 
+    private int getSaucerMaxHealth() {return 80 + 10 * (level - 1);}
 
     public List<Vector2D> getPlanetPositions(){return new ArrayList<>();}
-
 
     public static int getScore() {return score;}
 

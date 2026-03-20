@@ -41,9 +41,7 @@ public class CollisionSystem {
 
                   if(bullet.firedByShip != (ship instanceof PlayerShip)){
                         System.out.println("Bullet hit ship. Damage = " + bullet.damage);
-
-                        if(ship instanceof PlayerShip) ship.hit(bullet.damage);
-                        else ship.hit();
+                        ship.hit(bullet.damage);
 
                         bullet.dead = true;
                   }
@@ -55,9 +53,7 @@ public class CollisionSystem {
 
                   if(bullet.firedByShip != (ship instanceof PlayerShip)){
                         System.out.println("Bullet hit ship. Damage = " + bullet.damage);
-
-                        if(ship instanceof PlayerShip) ship.hit(bullet.damage);
-                        else ship.hit();
+                        ship.hit(bullet.damage);
 
                         bullet.dead = true;
                   }

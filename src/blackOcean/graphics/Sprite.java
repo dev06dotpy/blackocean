@@ -10,11 +10,11 @@ import utilities.ImageManager;
 import utilities.Vector2D;
 
 public class Sprite {
-    public static Image ASTEROID1, MILKYWAY2;
+    public static Image ASTEROID1, SPACE;
     static {
         try {
-            ASTEROID1 = ImageManager.loadImage("asteroid1");
-            MILKYWAY2 = ImageManager.loadImage("milkyway2");
+            ASTEROID1 = ImageManager.loadImage("asteroid1.png");
+            SPACE = ImageManager.loadImage("space_background.png");
         } catch (IOException e) {
             e.printStackTrace();
         }

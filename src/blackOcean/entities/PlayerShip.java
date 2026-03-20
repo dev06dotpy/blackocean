@@ -12,6 +12,9 @@ import static blackOcean.core.Constants.*;
 public class PlayerShip extends Ship {
 
     private int fuelDrain = 0;
+    private int fuelDrainRate = 20;
+    private int bulletDamage = 10;
+    private double bulletLifetime = Bullet.BULLET_LIFE;
 
     public PlayerShip(Controller ctrl) {
         super(new Vector2D(FRAME_WIDTH / 2, FRAME_HEIGHT / 2), new Vector2D(0, -1), 10);
@@ -30,6 +33,16 @@ public class PlayerShip extends Ship {
 
     @Override
     public void draw(Graphics2D g) {
+        if (PLAYERSHIP != null) {
+            AffineTransform at = g.getTransform();
+            g.translate(position.x, position.y);
+            g.rotate(direction.angle() + Math.PI / 2);
+            int size = (int) (2 * radius * DRAWING_SCALE);
+            g.drawImage(PLAYERSHIP, -size / 2, -size / 2, size, size, null);
+            g.setTransform(at);
+            return;
+        }
+
         AffineTransform at = g.getTransform();
         g.translate(position.x, position.y);
         double rot = direction.angle() + Math.PI / 2;
@@ -72,8 +85,8 @@ public class PlayerShip extends Ship {
 
         fuelDrain++;
 
-        // drain 1 fuel every 20 ticks
-        if (fuelDrain >= 20) {
+        // drain 1 fuel every N ticks
+        if (fuelDrain >= fuelDrainRate) {
             fuel = Math.max(0, fuel - 1);
             fuelDrain = 0;
         }
@@ -84,20 +97,55 @@ public class PlayerShip extends Ship {
         }
     }
 
+    @Override
+    protected void mkBullet() {
+        super.mkBullet();
+        if (bullet != null) {
+            bullet.damage = bulletDamage;
+            bullet.setLifetime(bulletLifetime);
+        }
+    }
+
     //health
     public int getHealth(){return health;}
     public int getMaxHealth(){return maxHealth;}
     public void addHealth(int amount) {health = Math.min(maxHealth, health + amount);}
+    public void addMaxHealth(int amount) {maxHealth = Math.max(1, maxHealth + amount);}
 
     //fuel
     public int getFuel() {return fuel;}
     public int getMaxFuel() { return maxFuel;}
     public void addFuel(int amount) {fuel = Math.min(maxFuel, fuel + amount);}
+    public int getFuelDrainRate() {return fuelDrainRate;}
+    public void setFuelDrainRate(int rate) {fuelDrainRate = Math.max(1, rate);}
 
     //shields
     public int getShields() {return shields;}
     public int getMaxShields() {return maxShields;}
     public void addShields(int amount) {shields = Math.min(maxShields, shields + amount);}
+
+    //weapon
+    public int getBulletDamage() {return bulletDamage;}
+    public void addBulletDamage(int amount) {bulletDamage = Math.max(1, bulletDamage + amount);}
+    public double getBulletLifetime() {return bulletLifetime;}
+    public void addBulletLifetime(double amount) {bulletLifetime = Math.max(0.1, bulletLifetime + amount);}
+
+    public void copyUpgradesFrom(PlayerShip other) {
+        if (other == null) return;
+
+        // Carry persistent upgrades when recreating the ship between modes/lives.
+        maxHealth = other.maxHealth;
+        maxFuel = other.maxFuel;
+        maxShields = other.maxShields;
+        fuelDrainRate = other.fuelDrainRate;
+        bulletDamage = other.bulletDamage;
+        bulletLifetime = other.bulletLifetime;
+
+        // Respawn with full resources.
+        health = maxHealth;
+        fuel = maxFuel;
+        shields = maxShields;
+    }
 
     public String toString() {
         return "Ship: " + super.toString();

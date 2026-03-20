@@ -1,5 +1,6 @@
-package blackOcean.entities.Consumables;
+package blackOcean.entities.Consumables.Resources;
 
+import blackOcean.entities.Consumables.Consumable;
 import blackOcean.entities.PlayerShip;
 import utilities.Vector2D;
 
@@ -7,7 +8,7 @@ import java.awt.*;
 
 import static blackOcean.core.Constants.FUEL_PACK;
 
-public class FuelTank extends Consumable{
+public class FuelTank extends Consumable {
 
       public FuelTank(Vector2D position){
             super(position, 12, Color.YELLOW, FUEL_PACK);

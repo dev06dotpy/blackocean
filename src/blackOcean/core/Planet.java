@@ -112,9 +112,19 @@ public class Planet {
       public void draw(Graphics2D g){
             for(int y = 0; y < PLANET_HEIGHT; y++){
                   for(int x = 0; x < PLANET_WIDTH; x++){
-                        if(walls[y][x]) g.setColor(Color.DARK_GRAY);
-                        else g.setColor(Color.BLACK);
-                        g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+                        int px = x * TILE_SIZE;
+                        int py = y * TILE_SIZE;
+                        if (walls[y][x]) {
+                              if (WALL1 != null) {
+                                    g.drawImage(WALL1, px, py, TILE_SIZE, TILE_SIZE, null);
+                              } else {
+                                    g.setColor(Color.DARK_GRAY);
+                                    g.fillRect(px, py, TILE_SIZE, TILE_SIZE);
+                              }
+                        } else {
+                              g.setColor(Color.BLACK);
+                              g.fillRect(px, py, TILE_SIZE, TILE_SIZE);
+                        }
                   }
             }
       }
