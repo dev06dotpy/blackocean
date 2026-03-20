@@ -78,8 +78,6 @@ public class View extends JComponent {
 
         g.setColor(Color.YELLOW);
         g.setFont(new Font("dialog", Font.BOLD, 20));
-        //g.drawString("Level: " + Game.getLevel(), 20, FRAME_HEIGHT - 20);
-        //g.drawString("Score: " + Game.getScore(), FRAME_WIDTH / 3 + 20, FRAME_HEIGHT - 20);
         g.drawString("Lives: " + Game.getLives(), 20, 30);
         g.drawString("Artifacts: " + Game.getArtifacts() + "/3", 20, 140);
         g.drawString("Damage = " + game.getPlayerShip().getBulletDamage(), 20, 165);
@@ -162,10 +160,6 @@ public class View extends JComponent {
         //border
         g.setColor(Color.WHITE);
         g.drawRect(barX, y, width, height);
-
-//        //label
-//        g.setColor(Color.YELLOW);
-//        g.drawString(stat + current + "/" + max, x, y - 5);
     }
 
     public void drawMinimap(Graphics2D g) {
@@ -212,10 +206,6 @@ public class View extends JComponent {
                 }
             }
 
-//            Vector2D playerPos = game.getPlayerShip().position;
-//            int playerX = mapX + (int) (playerPos.x / PLANET_PIXEL_WIDTH * mapWidth);
-//            int playerY = mapY + (int) (playerPos.y / PLANET_PIXEL_HEIGHT * mapHeight);
-
             for (GameObject obj : game.objects) {
                 int dotX = mapX + (int) ((obj.position.x / (double) PLANET_PIXEL_WIDTH) * mapWidth);
                 int dotY = mapY + (int) ((obj.position.y / (double) PLANET_PIXEL_HEIGHT) * mapHeight);
@@ -233,9 +223,6 @@ public class View extends JComponent {
                     g.setColor(Color.RED);
                     g.fillOval(dotX - 2, dotY - 2, 4, 4);
                 }
-
-//            g.setColor(Color.RED);
-//            g.fillOval(playerX - 3, playerY - 3, 8, 8);
 
             }
         }

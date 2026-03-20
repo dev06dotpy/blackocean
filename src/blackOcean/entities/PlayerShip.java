@@ -73,10 +73,8 @@ public class PlayerShip extends Ship {
         System.out.println("Health after = " + health + ", dead = " + dead);
         if (dead){
             Game.loseLife();
-            //SoundManager.play(bangLarge);
             System.out.println("Ship hit");
         }
-        // to avoid ship loss while testing
     }
 
     @Override
@@ -106,46 +104,43 @@ public class PlayerShip extends Ship {
         }
     }
 
-    //health
-    public int getHealth(){return health;}
-    public int getMaxHealth(){return maxHealth;}
-    public void addHealth(int amount) {health = Math.min(maxHealth, health + amount);}
-    public void addMaxHealth(int amount) {maxHealth = Math.max(1, maxHealth + amount);}
-
-    //fuel
-    public int getFuel() {return fuel;}
-    public int getMaxFuel() { return maxFuel;}
-    public void addFuel(int amount) {fuel = Math.min(maxFuel, fuel + amount);}
-    public int getFuelDrainRate() {return fuelDrainRate;}
-    public void setFuelDrainRate(int rate) {fuelDrainRate = Math.max(1, rate);}
-
-    //shields
-    public int getShields() {return shields;}
-    public int getMaxShields() {return maxShields;}
-    public void addShields(int amount) {shields = Math.min(maxShields, shields + amount);}
-
-    //weapon
-    public int getBulletDamage() {return bulletDamage;}
-    public void addBulletDamage(int amount) {bulletDamage = Math.max(1, bulletDamage + amount);}
-    public double getBulletLifetime() {return bulletLifetime;}
-    public void addBulletLifetime(double amount) {bulletLifetime = Math.max(0.1, bulletLifetime + amount);}
+    // Carry persistent upgrades when recreating the ship between modes/lives.
 
     public void copyUpgradesFrom(PlayerShip other) {
         if (other == null) return;
 
-        // Carry persistent upgrades when recreating the ship between modes/lives.
         maxHealth = other.maxHealth;
         maxFuel = other.maxFuel;
         maxShields = other.maxShields;
         fuelDrainRate = other.fuelDrainRate;
         bulletDamage = other.bulletDamage;
         bulletLifetime = other.bulletLifetime;
-
-        // Respawn with full resources.
         health = maxHealth;
         fuel = maxFuel;
         shields = maxShields;
     }
+
+    public int getHealth(){return health;}
+    public int getMaxHealth(){return maxHealth;}
+    public void addHealth(int amount) {health = Math.min(maxHealth, health + amount);}
+    public void addMaxHealth(int amount) {maxHealth = Math.max(1, maxHealth + amount);}
+
+    public int getFuel() {return fuel;}
+    public int getMaxFuel() { return maxFuel;}
+    public void addFuel(int amount) {fuel = Math.min(maxFuel, fuel + amount);}
+    public int getFuelDrainRate() {return fuelDrainRate;}
+    public void setFuelDrainRate(int rate) {fuelDrainRate = Math.max(1, rate);}
+
+    public int getShields() {return shields;}
+    public int getMaxShields() {return maxShields;}
+    public void addShields(int amount) {shields = Math.min(maxShields, shields + amount);}
+
+    public int getBulletDamage() {return bulletDamage;}
+    public void addBulletDamage(int amount) {bulletDamage = Math.max(1, bulletDamage + amount);}
+    public double getBulletLifetime() {return bulletLifetime;}
+    public void addBulletLifetime(double amount) {bulletLifetime = Math.max(0.1, bulletLifetime + amount);}
+
+
 
     public String toString() {
         return "Ship: " + super.toString();

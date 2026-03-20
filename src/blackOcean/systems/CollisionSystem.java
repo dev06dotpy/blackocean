@@ -25,13 +25,13 @@ public class CollisionSystem {
 
             // ship collision
             else if (a instanceof Ship && b instanceof Asteroid) {
-                  a.hit(10);
-                  b.hit(10);
+                  a.hit(50);
+                  b.hit(50);
             }
 
             else if (b instanceof Ship && a instanceof Asteroid) {
-                  b.hit(10);
-                  a.hit(10);
+                  b.hit(50);
+                  a.hit(50);
             }
 
             //bullet hits ship

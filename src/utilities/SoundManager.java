@@ -12,7 +12,7 @@ public class SoundManager {
     static int nBullet = 0;
     static boolean thrusting = false;
 
-    // this may need modifying
+
     final static String path = "Resources/sounds/";
 
     // note: having too many clips open may cause

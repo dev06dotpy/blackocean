@@ -24,6 +24,7 @@ import java.util.Random;
 
 import static blackOcean.core.Constants.*;
 
+//game state manager
 public class Game {
     public static final int N_INITIAL_ASTEROIDS = 5;
     public List<GameObject> objects;
@@ -52,25 +53,12 @@ public class Game {
             objects.add(new Asteroid());
 
         }
-        ctrl = new Keys(this);  //always create this (even when not used) to avoid
-        // having to comment out adding of action listener
+        ctrl = new Keys(this);
         controller = ctrl;
-        // alternate controller options to replace above line
-        // controller = new RandomAction();
-        // controller = new RotateNShoot();
-//        playerShip = new PlayerShip(controller);
-//        objects.add(playerShip);
-//        ships.add(playerShip);
-//
-//        mode = GameMode.SPACE;
-//        currentMode = mode;
-//        currentPlanet = null;
-//
-//        addSaucers();
-//        addConsumables();
           spaceMode();
     }
 
+    //switch to space
     public void spaceMode(){
         PlayerShip previousShip = playerShip;
         objects.clear();
@@ -91,6 +79,7 @@ public class Game {
         objects.add(addConsumables());
     }
 
+    // switch to planet
     public void planetMode(){
         PlayerShip previousShip = playerShip;
         objects.clear();
@@ -112,8 +101,6 @@ public class Game {
         addPlanetPerks();
         objects.add(addArtifact());
     }
-
-    // TODO: Make each level harder and add every time you collect an artifact level++. Level++ also increases enemy ships health
     public void newLevel() {
         level++;
         try {
@@ -127,6 +114,7 @@ public class Game {
 
     }
 
+    //respawn
     public void newLife() {
         try {
             Thread.sleep(1000);
@@ -139,6 +127,7 @@ public class Game {
         }
     }
 
+    //add enemies
     private void addSaucers() {
         int saucerCount = getSaucerCount();
         int saucerMaxHealth = getSaucerMaxHealth();
@@ -160,9 +149,6 @@ public class Game {
             saucer.position = pos;
             if (i % 3 == 0) {
                 ((AimNShoot) ctrl).setShip(saucer);
-                // move the saucer if it is too close to the player ship;
-                // otherwise it will shoot ship immediately before player
-                // has time to flee
                 Vector2D posDiff = new Vector2D(saucer.position).subtract(playerShip.position);
                 if (posDiff.mag() < AimNShoot.SHOOTING_DISTANCE) {
                     saucer.position = new Vector2D(playerShip.position).addScaled(posDiff.normalise(), AimNShoot.SHOOTING_DISTANCE * 0.75);
@@ -173,6 +159,7 @@ public class Game {
         }
     }
 
+    //spawn consumables i.e., perks, weapon mods and resources
     private GameObject addConsumables() {
 
         Random random = new Random();
@@ -198,6 +185,7 @@ public class Game {
         );
     }
 
+    // spawn perks on planet
     private void addPlanetPerks() {
         if (mode != GameMode.PLANET) return;
         objects.add(new FuelEfficiency(randomConsumablePosition()));
@@ -223,8 +211,10 @@ public class Game {
         }
     }
 
+    //update
     public void update() {
 
+        //enter the planet
           if(mode == GameMode.SPACE && ctrl.action().interact) {
                 SpacePlanet targetPlanet = getNearbyPlanet();
 
@@ -234,7 +224,6 @@ public class Game {
                       return;
                 }
           }
-
         for (int i = 0; i < objects.size(); i++) {
             GameObject o1 = objects.get(i);
             if (o1.dead) continue;
@@ -251,8 +240,6 @@ public class Game {
         int consumableCount = 0;
         for (GameObject o : objects) {
             o.update();
-
-            //applyWorldRules(o);
 
             if (o instanceof Asteroid) {
                 Asteroid a = (Asteroid) o;
@@ -311,7 +298,7 @@ public class Game {
         if (lives == 0)
             gameOver = true;
     }
-
+    //press P to switch modes if needed
     public void togglePlanetMode() {
 
         synchronized (Game.class){
@@ -329,6 +316,7 @@ public class Game {
           addPlanetDefenders(spacePlanet);
     }
 
+    // add saucers that orbit the planet
     private void addPlanetDefenders(SpacePlanet planet){
           int defenderCount = getSaucerCount();
           int saucerMaxHealth = getSaucerMaxHealth();
@@ -354,7 +342,6 @@ public class Game {
                 ships.add(saucer);
           }
     }
-
     private SpacePlanet getNearbyPlanet(){
           for(SpacePlanet sp : spacePlanets){
                 if(sp.isUnlocked() && sp.playerInRange(playerShip)) return sp;
@@ -362,6 +349,7 @@ public class Game {
           return null;
     }
 
+    //update artifact count and increase level
     public static void collectArtifact(){
         artifacts++;
         level++;
@@ -375,6 +363,7 @@ public class Game {
         else{ returnToSpace = true;}
     }
 
+    //spawn artifact
     private GameObject addArtifact(){
         double spawnRadius = 14;
         Vector2D pos = planet.randomCavePosition(spawnRadius);
@@ -385,7 +374,6 @@ public class Game {
 
     private int getSaucerMaxHealth() {return 80 + 10 * (level - 1);}
 
-    public List<Vector2D> getPlanetPositions(){return new ArrayList<>();}
 
     public static int getScore() {return score;}
 
@@ -402,5 +390,7 @@ public class Game {
     public static int getArtifacts(){return artifacts;}
 
     public static boolean hasPlayerWon(){return winState;}
+
+    public List<Vector2D> getPlanetPositions(){return new ArrayList<>();}
 }
 

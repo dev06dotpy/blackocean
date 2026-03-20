@@ -17,13 +17,6 @@ public class ImageManager {
     public static Image getImage(String s) {
         return images.get(s);
     }
-
-//    public static Image loadImage(String fname) throws IOException {
-//        BufferedImage img = ImageIO.read(new File(path + fname));
-//        images.put(fname, img);
-//        System.out.println("loaded image");
-//        return img;
-//    }
 public static Image loadImage(String fname) throws IOException {
     File file = new File(path + fname);
     System.out.println("Trying to load: " + file.getAbsolutePath());

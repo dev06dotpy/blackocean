@@ -33,12 +33,9 @@ public class AimNShoot implements Controller {
             action.shoot = false;
             return action;
         }
-        //System.out.println("target found");
         action.turn = Controllers.aim(ship, target);
-        //System.out.println("turn = " + action.turn);
         if (action.turn == 0) {
             double distanceToTarget = ship.distance(target);
-            //System.out.println("target dist = " + distanceToTarget);
             action.shoot = distanceToTarget < SHOOTING_DISTANCE + target.radius;
         }
         action.thrust = 0;

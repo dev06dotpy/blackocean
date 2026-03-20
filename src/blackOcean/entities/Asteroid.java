@@ -41,8 +41,6 @@ public class Asteroid extends GameObject {
 
     public void draw(Graphics2D g) {
         sprite.draw(g);
-        //g.setColor(Color.RED);
-        //g.fillOval((int) (position.x - radius), (int) (position.y - radius), (int) (2 * radius), (int) (2 * radius));
     }
 
     public Asteroid() {

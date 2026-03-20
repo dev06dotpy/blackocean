@@ -28,8 +28,8 @@ public abstract class GameObject {
         this.dead = false;
     }
     public void update() {
-        position.addScaled(velocity, DT);
         if (Game.getCurrentMode() == Game.GameMode.SPACE) {
+            position.addScaled(velocity, DT);
             if (position.x < radius) {
                 position.x = radius;
                 velocity.x = -velocity.x;
@@ -49,19 +49,20 @@ public abstract class GameObject {
             Planet planet = Game.getCurrentPlanet();
 
             double oldX = position.x;
-            double oldY = position.y;
-
             position.x += velocity.x * DT;
-            if(planet.collidesWithWall(position, radius)){
+            if (planet.collidesWithWall(position, radius)) {
                 position.x = oldX;
-                velocity.x *= -0.2;
-            }
-            position.y += velocity.y * DT;
-            if(planet.collidesWithWall(position, radius)){
-                position.y = oldY;
-                velocity.y *= -0.2;
+                velocity.x = -velocity.x;
             }
 
+            double oldY = position.y;
+            position.y += velocity.y * DT;
+            if (planet.collidesWithWall(position, radius)) {
+                position.y = oldY;
+                velocity.y = -velocity.y;
+            }
+        } else {
+            position.addScaled(velocity, DT);
         }
     }
 

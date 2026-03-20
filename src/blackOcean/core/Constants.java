@@ -22,7 +22,6 @@ public class Constants {
     public static Image PLAYERSHIP, SAUCER1, SAUCER2, BULLET;
     public static Image FUEL_PACK, HEALTH_PACK, SHIELD_PACK, LANDMINE, ARTIFACT;
     public static Image POWER_UP, BLASTER_MOD;
-    public static Image SNIPER_MOD, DOUBLE_DAMAGE_MOD, BURST_FIRE_MOD;
     public static Image WALL1;
     public static Image HEALTH_ICON, SHIELD_ICON, FUEL_ICON;
     static{
@@ -44,10 +43,6 @@ public class Constants {
             LANDMINE = ImageManager.loadImage("landmine.png");
             POWER_UP = ImageManager.loadImage("power-up.png");
             BLASTER_MOD = ImageManager.loadImage("blaster.png");
-
-//            SNIPER_MOD = ImageManager.loadImage("");
-//            DOUBLE_DAMAGE_MOD = ImageManager.loadImage("");
-//            BURST_FIRE_MOD = ImageManager.loadImage("");
 
             WALL1 = ImageManager.loadImage("platformIndustrial_005.png");
 
